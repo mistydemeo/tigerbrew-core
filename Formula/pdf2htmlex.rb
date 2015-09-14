@@ -1,15 +1,22 @@
 class Pdf2htmlex < Formula
   desc "PDF to HTML converter"
   homepage "https://coolwanglu.github.io/pdf2htmlEX/"
-  url "https://github.com/coolwanglu/pdf2htmlEX/archive/v0.14.6.tar.gz"
-  sha256 "320ac2e1c2ea4a2972970f52809d90073ee00a6c42ef6d9833fb48436222f0e5"
+  url "https://github.com/coolwanglu/pdf2htmlEX/archive/v0.13.6.tar.gz"
+  sha256 "fc133a5791bfd76a4425af16c6a6a2460f672501b490cbda558213cb2b03d5d7"
+  revision 2
 
   head "https://github.com/coolwanglu/pdf2htmlEX.git"
 
   bottle do
-    sha256 "f47e13707f18b86f5dd60523eb22d70d19d4041765897b58c1367460788bf8ea" => :el_capitan
-    sha256 "3c144b96740872aba9bbf9b1dbefc3753b892865fdb7a70cd2e0626449a9d6d7" => :yosemite
-    sha256 "6bbf6198c132c3343b1bee113eeb56622194ac28909355576d39fc0b53e363ed" => :mavericks
+    sha256 "e6d24f3d8965c5e1818617259043a078e1a7a4e30156b6590a29b65d95665d20" => :yosemite
+    sha256 "0a1e42acd467e28b4d47fa2e65d98a9e212c8e2cc5e704f3d27093c08464320e" => :mavericks
+    sha256 "db0fde0dbf02fb50811a8ab57421d8bb7c9839669f31906df9803fd71a05168b" => :mountain_lion
+  end
+
+  # Pdf2htmlex use an outdated, customised Fontforge installation.
+  # See https://github.com/coolwanglu/pdf2htmlEX/wiki/Building
+  resource "fontforge" do
+    url "https://github.com/coolwanglu/fontforge.git", :branch => "pdf2htmlEX"
   end
 
   depends_on :macos => :lion
@@ -30,30 +37,29 @@ class Pdf2htmlex < Formula
   depends_on "jpeg"     => :recommended
   depends_on "libtiff"  => :recommended
 
-  # Pdf2htmlex use an outdated, customised Fontforge installation.
-  # See https://github.com/coolwanglu/pdf2htmlEX/wiki/Building
-  resource "fontforge" do
-    url "https://github.com/coolwanglu/fontforge.git", :branch => "pdf2htmlEX"
-  end
-
   # And failures
   fails_with :llvm do
     build 2336
     cause "Compiling cvexportdlg.c fails with error: initializer element is not constant"
   end
 
+  # Fix a compilation failure with poppler 0.31.0+
+  # Upstream is aware of the issue and suggested this patch:
+  # https://github.com/coolwanglu/pdf2htmlEX/commit/d4fc82b#commitcomment-12239022
+  patch :DATA
+
   def install
     resource("fontforge").stage do
-      args = %W[
-        --prefix=#{prefix}/fontforge
-        --without-libzmq
-        --without-x
-        --without-iconv
-        --disable-python-scripting
-        --disable-python-extension
+      args = [
+        "--prefix=#{prefix}/fontforge",
+        "--without-libzmq",
+        "--without-x",
+        "--without-iconv",
+        "--disable-python-scripting",
+        "--disable-python-extension"
       ]
 
-      # Fix linker error; see: https://trac.macports.org/ticket/25012
+      # Fix linker error; see: http://trac.macports.org/ticket/25012
       ENV.append "LDFLAGS", "-lintl"
 
       # Reset ARCHFLAGS to match how we build
@@ -78,3 +84,18 @@ class Pdf2htmlex < Formula
     system "#{bin}/pdf2htmlEX", test_fixtures("test.pdf")
   end
 end
+
+__END__
+diff --git a/3rdparty/poppler/git/CairoFontEngine.cc b/3rdparty/poppler/git/CairoFontEngine.cc
+index 229a86c..7cc448b 100644
+--- a/3rdparty/poppler/git/CairoFontEngine.cc
++++ b/3rdparty/poppler/git/CairoFontEngine.cc
+@@ -421,7 +421,7 @@ CairoFreeTypeFont *CairoFreeTypeFont::create(GfxFont *gfxFont, XRef *xref,
+   ref = *gfxFont->getID();
+   fontType = gfxFont->getType();
+
+-  if (!(fontLoc = gfxFont->locateFont(xref, gFalse))) {
++  if (!(fontLoc = gfxFont->locateFont(xref, nullptr))) {
+     error(errSyntaxError, -1, "Couldn't find a font for '{0:s}'",
+	gfxFont->getName() ? gfxFont->getName()->getCString()
+	                       : "(unnamed)");

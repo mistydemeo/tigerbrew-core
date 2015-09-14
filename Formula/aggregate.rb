@@ -1,17 +1,17 @@
 class Aggregate < Formula
   desc "Optimizes lists of prefixes to reduce list lengths"
-  # Note - Freecode is no longer being updated.
   homepage "http://freecode.com/projects/aggregate/"
-  url "https://ftp.isc.org/isc/aggregate/aggregate-1.6.tar.gz"
+  url "ftp://ftp.isc.org/isc/aggregate/aggregate-1.6.tar.gz"
   sha256 "166503005cd8722c730e530cc90652ddfa198a25624914c65dffc3eb87ba5482"
 
   bottle do
-    cellar :any_skip_relocation
-    revision 1
-    sha256 "87507a739f2bd5ba57ccd23b34f2b7c41d68a897c128231dbbc32ba23b869ed5" => :el_capitan
-    sha256 "813ccd28b00f94e1574079f7f6816858e32c5d8f9a964b783307d25c7e449d2b" => :yosemite
-    sha256 "169598a0d41382215ba51ed0c377c98857804e82fb1658414dd04ee94ddbb993" => :mavericks
+    cellar :any
+    sha1 "94eb9307d2f12e20663b6c47e3a60317ab7ac6e6" => :mavericks
+    sha1 "b2f030ab1484299fa1fffbcfbcd4e84e8726e1bc" => :mountain_lion
+    sha1 "c2a27bf04eb3efcafbf4b271e7cfb7b520eac7f4" => :lion
   end
+
+  # Note - Freecode is no longer being updated & an alternative homepage should be found if possible.
 
   conflicts_with "crush-tools", :because => "both install an `aggregate` binary"
 

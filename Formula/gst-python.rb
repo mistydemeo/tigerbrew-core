@@ -1,30 +1,29 @@
 class GstPython < Formula
-  desc "Python overrides for gobject-introspection-based pygst bindings"
-  homepage "https://gstreamer.freedesktop.org/modules/gst-python.html"
-  url "https://gstreamer.freedesktop.org/src/gst-python/gst-python-1.6.2.tar.xz"
-  sha256 "4e763e317079f48a2d6f37bd600bc19650d61597fac9f5763dbad293f72f9125"
+  desc "GStreamer Python overrides for gobject-introspection-based pygst bindings"
+  homepage "http://gstreamer.freedesktop.org/modules/gst-python.html"
+  url "http://gstreamer.freedesktop.org/src/gst-python/gst-python-1.4.0.tar.xz"
+  sha256 "b1e40c29ceb41b03f08d38aca6056054f0341d0706276326dceeec6ac8d53d3e"
+  revision 1
 
   bottle do
-    sha256 "2238face2977ef583ca91be6c14af2eff18627b613e71d4323b6d5127aa4df08" => :el_capitan
-    sha256 "d2fde997e41000ced229cd3a6a309f4230fe7a278f54104506ebcbaff7b2fc5e" => :yosemite
-    sha256 "0f152b4f04998d1e2ace57b736318026c08e68d5c76c596c2cfa0d465cc525c6" => :mavericks
+    revision 1
+    sha256 "23cc5d7ab90a98cb8baf83cff0b8c1f46077ed9171f1aa8b8a28db963f8d6039" => :yosemite
+    sha256 "40fda115c1425f67ec25228f86d902c7cbc4522bc71cc7daedce37f04041a1cf" => :mavericks
+    sha256 "d3b34dcf00708c39721a1696a9bea2ef5fe3144ef1dad200971e063654d372eb" => :mountain_lion
   end
 
   depends_on "gst-plugins-base"
   depends_on "pygobject3"
 
-  link_overwrite "lib/python2.7/site-packages/gi/overrides"
-
   def install
-    # pygi-overrides-dir switch ensures files don't break out of sandbox.
-    system "./configure", "--disable-dependency-tracking",
+    system "./configure", "--disable-debug",
+                          "--disable-dependency-tracking",
                           "--disable-silent-rules",
-                          "--prefix=#{prefix}",
-                          "--with-pygi-overrides-dir=#{lib}/python2.7/site-packages/gi/overrides"
+                          "--prefix=#{prefix}"
     system "make", "install"
   end
 
   test do
-    system "#{Formula["gstreamer"].opt_bin}/gst-inspect-1.0", "python"
+    system "gst-inspect-1.0", "python"
   end
 end

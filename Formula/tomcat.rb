@@ -1,39 +1,25 @@
 class Tomcat < Formula
   desc "Implementation of Java Servlet and JavaServer Pages"
   homepage "https://tomcat.apache.org/"
+  url "https://www.apache.org/dyn/closer.cgi?path=tomcat/tomcat-8/v8.0.26/bin/apache-tomcat-8.0.26.tar.gz"
+  mirror "https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.26/bin/apache-tomcat-8.0.26.tar.gz"
+  sha256 "9f11588f0ff767adde63cd6919462c0c2742897560f4b367a0ffffdd8b1ed382"
 
-  stable do
-    url "https://www.apache.org/dyn/closer.cgi?path=tomcat/tomcat-8/v8.0.32/bin/apache-tomcat-8.0.32.tar.gz"
-    mirror "https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.32/bin/apache-tomcat-8.0.32.tar.gz"
-    sha256 "7e23260f2481aca88f89838e91cb9ff00548a28ba5a19a88ff99388c7ee9a9b8"
-
-    depends_on :java => "1.7+"
-
-    resource "fulldocs" do
-      url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-8/v8.0.32/bin/apache-tomcat-8.0.32-fulldocs.tar.gz"
-      mirror "https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.32/bin/apache-tomcat-8.0.32-fulldocs.tar.gz"
-      version "8.0.32"
-      sha256 "b3a13d3c4a5de2970b8097117e2b8976c2a42d0fdb8492c116533e6e59a1c305"
-    end
+  bottle do
+    cellar :any
+    sha256 "0451222ba2341cba4152c5007967b536a6bf536c9cdd304ab9c2474dffe7b3b7" => :yosemite
+    sha256 "9258495d4ced771aa184ac7811df80f9932db61cda28ba811e595b8c8167ccbc" => :mavericks
+    sha256 "a1e6d8ed630f87bb5861f3fb0fadd97dc824d55fa3d689483779c14b3e2c7cfa" => :mountain_lion
   end
-
-  devel do
-    url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.0.M3/bin/apache-tomcat-9.0.0.M3.tar.gz"
-    version "9.0.0.M3"
-    sha256 "edde79fdd49649ffc2ce6b8c7a6b665b45a450629b60e78f436f3528570e9104"
-
-    depends_on :java => "1.8+"
-
-    resource "fulldocs" do
-      url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.0.M3/bin/apache-tomcat-9.0.0.M3-fulldocs.tar.gz"
-      version "9.0.0.M3"
-      sha256 "c430d0044823857099601d82afe0f15e715859dc17402f9ce7083d0647f63e9b"
-    end
-  end
-
-  bottle :unneeded
 
   option "with-fulldocs", "Install full documentation locally"
+
+  resource "fulldocs" do
+    url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-8/v8.0.26/bin/apache-tomcat-8.0.26-fulldocs.tar.gz"
+    mirror "https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.26/bin/apache-tomcat-8.0.26-fulldocs.tar.gz"
+    version "8.0.26"
+    sha256 "813513d61e6def5ccf01adc95bf9d28594fce71ff32f5e23dc1482c7ec2f129b"
+  end
 
   def install
     # Remove Windows scripts
@@ -45,22 +31,5 @@ class Tomcat < Formula
     bin.install_symlink "#{libexec}/bin/catalina.sh" => "catalina"
 
     (share/"fulldocs").install resource("fulldocs") if build.with? "fulldocs"
-  end
-
-  test do
-    ENV["CATALINA_BASE"] = testpath
-    cp_r Dir["#{libexec}/*"], testpath
-    rm Dir["#{libexec}/logs/*"]
-
-    pid = fork do
-      exec bin/"catalina", "start"
-    end
-    sleep 3
-    begin
-      system bin/"catalina", "stop"
-    ensure
-      Process.wait pid
-    end
-    File.exist? testpath/"logs/catalina.out"
   end
 end

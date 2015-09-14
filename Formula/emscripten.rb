@@ -3,24 +3,24 @@ class Emscripten < Formula
   homepage "https://kripken.github.io/emscripten-site/"
 
   stable do
-    url "https://github.com/kripken/emscripten/archive/1.35.23.tar.gz"
-    sha256 "66b176203f82a52f511ffa1a47baa9d6a033b61dc5486b4034655912d8224c38"
+    url "https://github.com/kripken/emscripten/archive/1.34.6.tar.gz"
+    sha256 "630722efebbfd4840ece7dfb8c0bccd714ad9257eab9ac2777db372e4ecf4bb5"
 
     resource "fastcomp" do
-      url "https://github.com/kripken/emscripten-fastcomp/archive/1.35.23.tar.gz"
-      sha256 "89901c882684f6ff3745b15a5994c77ec2df6a957f4525d786e14c0bd6165e20"
+      url "https://github.com/kripken/emscripten-fastcomp/archive/1.34.6.tar.gz"
+      sha256 "06a619890de5f40cb4e7ba078c5f053d0df4f58eed30d9afe14f782884088160"
     end
 
     resource "fastcomp-clang" do
-      url "https://github.com/kripken/emscripten-fastcomp-clang/archive/1.35.23.tar.gz"
-      sha256 "cb39e052177b1461f7404d4d0601e0276982e847cc5054c813ed48d5e0ed082d"
+      url "https://github.com/kripken/emscripten-fastcomp-clang/archive/1.34.6.tar.gz"
+      sha256 "72eb853cb532daf339a81fbcb86874d3dc29e837acb2c5362044da2b74a4f6df"
     end
   end
 
   bottle do
-    sha256 "27cce062785327422afcf54243f27b1f0257f1146c85cb5fa460995aad9464f0" => :el_capitan
-    sha256 "59f97e1ea052e3c5bdbe0b8cfd045ac0a894a0f43563ff199e6c94bc70eeb93c" => :yosemite
-    sha256 "856d76a56cbebfd555149c169750b57ede59777682ca7bce0607ac3f5e914f2f" => :mavericks
+    sha256 "99abf785baf4616d5c1a92ffc8540b07faa03a291e4213a960780b4829d4e118" => :yosemite
+    sha256 "46794913b20d07af986f34b27e435a26209b426094f5eb596e44052aeefee997" => :mavericks
+    sha256 "ff99dde33e1becbb604f6aa3b251b37c494c4da2fecb94916d25e50a6975f8d2" => :mountain_lion
   end
 
   head do
@@ -64,11 +64,11 @@ class Emscripten < Formula
       "--enable-optimized",
       "--enable-targets=host,js",
       "--disable-assertions",
-      "--disable-bindings",
+      "--disable-bindings"
     ]
 
-    mkdir "fastcomp/build" do
-      system "../configure", *args
+    cd "fastcomp" do
+      system "./configure", *args
       system "make"
       system "make", "install"
     end

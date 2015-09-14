@@ -1,23 +1,22 @@
 class Libebml < Formula
   desc "Sort of a sbinary version of XML"
-  homepage "https://www.matroska.org/"
-  url "https://dl.matroska.org/downloads/libebml/libebml-1.3.3.tar.bz2"
-  mirror "https://www.bunkus.org/videotools/mkvtoolnix/sources/libebml-1.3.3.tar.bz2"
-  sha256 "35fb44daa41961f94a0ac1b8f06801e88cc9bf2ad6f562ced8ab7c1f1a875499"
-
-  bottle do
-    cellar :any
-    revision 1
-    sha256 "9d18eec56b97f4b9304d1c9b92b1d3cd6e3aa6c2a844098c197c3524ec68fb82" => :el_capitan
-    sha256 "2590306d51d005b74fb05256c2673b4346c875ae85c4835fd2af3ebd8077f3f5" => :yosemite
-    sha256 "1a2dc78501374e502a94e9e48646e01ad08fbf28be22b2d0ea8e945608623784" => :mavericks
-  end
+  homepage "http://www.matroska.org/"
+  url "http://dl.matroska.org/downloads/libebml/libebml-1.3.1.tar.bz2"
+  mirror "https://www.bunkus.org/videotools/mkvtoolnix/sources/libebml-1.3.1.tar.bz2"
+  sha256 "195894b31aaca55657c9bc157d744f23b0c25597606b97cfa5a9039c4b684295"
 
   head do
     url "https://github.com/Matroska-Org/libebml.git"
     depends_on "automake" => :build
     depends_on "autoconf" => :build
     depends_on "libtool" => :build
+  end
+
+  bottle do
+    cellar :any
+    sha1 "5e3f974d17bd9f6fad89d19c403e3fd720f6c509" => :yosemite
+    sha1 "8bbd297bdca1e250bedf9f9a1800a8819fa97d34" => :mavericks
+    sha1 "c1ea1c44a4653770dd92ecfa64561f8f449f1da2" => :mountain_lion
   end
 
   option :cxx11

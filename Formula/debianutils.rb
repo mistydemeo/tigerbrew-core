@@ -1,24 +1,23 @@
 class Debianutils < Formula
   desc "Miscellaneous utilities specific to Debian"
-  homepage "https://packages.debian.org/sid/debianutils"
-  url "https://mirrors.ocf.berkeley.edu/debian/pool/main/d/debianutils/debianutils_4.7.tar.xz"
-  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/d/debianutils/debianutils_4.7.tar.xz"
-  sha256 "a269cacd40f52f2fa5d5636357714a49e8538459c16d77772efaa23711fe53d9"
+  homepage "https://packages.debian.org/unstable/utils/debianutils"
+  url "https://mirrors.kernel.org/debian/pool/main/d/debianutils/debianutils_4.5.1.tar.xz"
+  mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/d/debianutils/debianutils_4.5.1.tar.xz"
+  sha256 "a531c23e0105fe01cfa928457a8343a1e947e2621b3cd4d05f4e9656020c63b7"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "2d45be912692edddd266ce47df61d6f90f3ea3684d01e7d9da638b50b7100d5a" => :el_capitan
-    sha256 "1bfeba641209396a9cae6d92540669f22e0d02504de3fe55ad03743adb125ab0" => :yosemite
-    sha256 "19d7013c70729517ec148bb79690e6360c072ad55518fd64027ae73303ef8848" => :mavericks
+    cellar :any
+    sha256 "7423986e33ae722a5180c7a42c22a497e31d5d9ae140612d07dfc4b7f679caaa" => :yosemite
+    sha256 "6b7732f38f3654feda464cb57f6ecc901bd765f30682f8e6e1bd7623ee9f2ff0" => :mavericks
+    sha256 "36f1cd0ac60602c203bd1b1bac57b6c85991ad54e6f8cf61dae0e2f5541ccc89" => :mountain_lion
   end
 
   def install
     system "./configure", "--disable-dependency-tracking",
-                          "--disable-silent-rules",
                           "--prefix=#{prefix}"
     system "make"
 
-    # Some commands are Debian Linux specific and we don't want them, so install specific tools
+    # some commands are Debian Linux specific and we don't want them, so install specific tools
     bin.install "run-parts", "ischroot", "tempfile"
     man1.install "ischroot.1", "tempfile.1"
     man8.install "run-parts.8"

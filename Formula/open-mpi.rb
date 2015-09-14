@@ -1,14 +1,13 @@
 class OpenMpi < Formula
   desc "High performance message passing library"
   homepage "https://www.open-mpi.org/"
-  url "https://www.open-mpi.org/software/ompi/v1.10/downloads/openmpi-1.10.2.tar.bz2"
-  sha256 "8846e7e69a203db8f50af90fa037f0ba47e3f32e4c9ccdae2db22898fd4d1f59"
+  url "https://www.open-mpi.org/software/ompi/v1.10/downloads/openmpi-1.10.0.tar.bz2"
+  sha256 "26b432ce8dcbad250a9787402f2c999ecb6c25695b00c9c6ee05a306c78b6490"
 
   bottle do
-    revision 1
-    sha256 "3a6ec528d87a0648b30ec17b0dd88a7c40bac25719cb6509421879d9dab009bb" => :el_capitan
-    sha256 "8682efb08c38e781245783991a2ed1019f92eb735288c8d1a0cf25ea8b559ed7" => :yosemite
-    sha256 "168b60f491efc640c17fb92afd64eacf5b9430d519f594934106be01561bf907" => :mavericks
+    sha256 "27b7652c76a14b6cc2587963a7b90384844cbc52e947569f24bee71697447b37" => :yosemite
+    sha256 "8db6160f29874dac3705f5c18a3cb9e62e0b36c8beaed70b72dc4aeda642d1c8" => :mavericks
+    sha256 "823851cf8e01825899d97dc1766dc1c44eb11f5cc1a3a25b60b5c087c35ec81d" => :mountain_lion
   end
 
   head do
@@ -27,6 +26,7 @@ class OpenMpi < Formula
   conflicts_with "mpich", :because => "both install mpi__ compiler wrappers"
   conflicts_with "lcdf-typetools", :because => "both install same set of binaries."
 
+  depends_on :java => :build
   depends_on :fortran => :recommended
   depends_on "libevent"
 
@@ -41,7 +41,6 @@ class OpenMpi < Formula
       --with-libevent=#{Formula["libevent"].opt_prefix}
       --with-sge
     ]
-    args << "--with-platform-optimized" if build.head?
     args << "--disable-mpi-fortran" if build.without? "fortran"
     args << "--enable-mpi-thread-multiple" if build.with? "mpi-thread-multiple"
 
@@ -53,9 +52,7 @@ class OpenMpi < Formula
 
     # If Fortran bindings were built, there will be stray `.mod` files
     # (Fortran header) in `lib` that need to be moved to `include`.
-    if build.with? "fortran"
-      include.install Dir["#{lib}/*.mod"]
-    end
+    include.install Dir["#{lib}/*.mod"]
 
     if build.stable?
       # Move vtsetup.jar from bin to libexec.
@@ -85,19 +82,5 @@ class OpenMpi < Formula
     system "#{bin}/mpicc", "hello.c", "-o", "hello"
     system "./hello"
     system "#{bin}/mpirun", "-np", "4", "./hello"
-    (testpath/"hellof.f90").write <<-EOS.undent
-      program hello
-      include 'mpif.h'
-      integer rank, size, ierror, tag, status(MPI_STATUS_SIZE)
-      call MPI_INIT(ierror)
-      call MPI_COMM_SIZE(MPI_COMM_WORLD, size, ierror)
-      call MPI_COMM_RANK(MPI_COMM_WORLD, rank, ierror)
-      print*, 'node', rank, ': Hello Fortran world'
-      call MPI_FINALIZE(ierror)
-      end
-    EOS
-    system "#{bin}/mpif90", "hellof.f90", "-o", "hellof"
-    system "./hellof"
-    system "#{bin}/mpirun", "-np", "4", "./hellof"
   end
 end

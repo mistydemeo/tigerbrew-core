@@ -3,15 +3,15 @@ class Libav < Formula
   homepage "https://libav.org/"
   url "https://libav.org/releases/libav-11.4.tar.xz"
   sha256 "0b7dabc2605f3a254ee410bb4b1a857945696aab495fe21b34c3b6544ff5d525"
-  revision 2
+  revision 1
 
-  head "https://git.libav.org/libav.git"
+  head "git://git.libav.org/libav.git"
 
   bottle do
-    revision 1
-    sha256 "3223c7dd692ab5f842161c25bd000dc7e35e4dbd115075e689f24761917c3b28" => :el_capitan
-    sha256 "918a06af5462bb2854099ff9df522f03d86d2913961305a0ea250cae48058f95" => :yosemite
-    sha256 "4d67498870e513e072c2ccbbf43f23657bb90dc6c2871d52221902823bcfbf40" => :mavericks
+    sha256 "dad5ad033a6424e5e3ac54fbbab18aa86323d2213cd648123c98de79679b56c2" => :el_capitan
+    sha256 "6e177af0f3542941c2da2d4a7ac4a8f5a235d46df391dfb369b1898a0ca8fa4a" => :yosemite
+    sha256 "fdb2471385a510975a745a83a854298b485a99188d938d2683f21e65a84264e0" => :mavericks
+    sha256 "74430bdad28f782040426d29bcde9be907bc20462bc20bb41c913f041d969617" => :mountain_lion
   end
 
   option "without-faac", "Disable AAC encoder via faac"
@@ -60,13 +60,6 @@ class Libav < Formula
   depends_on "speex" => :optional
   depends_on "theora" => :optional
 
-  # Fixes the use of a removed identifier in libvpx;
-  # will be fixed in the next release.
-  patch do
-    url "https://github.com/libav/libav/commit/4d05e9392f84702e3c833efa86e84c7f1cf5f612.patch"
-    sha256 "78f02e231f3931a6630ec4293994fc6933c6a1c3d1dd501989155236843c47f9"
-  end
-
   def install
     args = [
       "--disable-debug",
@@ -79,7 +72,7 @@ class Libav < Formula
       "--enable-vda",
       "--cc=#{ENV.cc}",
       "--host-cflags=#{ENV.cflags}",
-      "--host-ldflags=#{ENV.ldflags}",
+      "--host-ldflags=#{ENV.ldflags}"
     ]
 
     args << "--enable-frei0r" if build.with? "frei0r"

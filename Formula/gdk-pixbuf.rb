@@ -1,18 +1,18 @@
 class GdkPixbuf < Formula
   desc "Toolkit for image loading and pixel buffer manipulation"
   homepage "http://gtk.org"
-  url "https://download.gnome.org/sources/gdk-pixbuf/2.32/gdk-pixbuf-2.32.3.tar.xz"
-  sha256 "2b6771f1ac72f687a8971e59810b8dc658e65e7d3086bd2e676e618fd541d031"
+  url "https://download.gnome.org/sources/gdk-pixbuf/2.30/gdk-pixbuf-2.30.8.tar.xz"
+  sha256 "4853830616113db4435837992c0aebd94cbb993c44dc55063cee7f72a7bef8be"
 
   bottle do
     revision 1
-    sha256 "ed2b262389586d964b5054efb91caa0627d53706bc0b18a3337b83badcc45c74" => :el_capitan
-    sha256 "d0fbcabe793d595d424f11e078f621291f3a9556da793da2efd2f7e1e9ea543f" => :yosemite
-    sha256 "b48036231be2a0212a8e4a591ac6c355652d77391fc15b9a3dfd9c9857cf4a10" => :mavericks
+    sha256 "c7d8bc0380bb1116c2d0ce743e56daa59e982b95ce321076409d24eb960124fa" => :el_capitan
+    sha1 "fb4261dd767c0e88888ef210e7c6bf91c4e2549e" => :yosemite
+    sha1 "06dc916f0fc6018e390285cb4b882478b10417fd" => :mavericks
+    sha1 "b3e286bf4e15e8e2e522f049c8e8d9a39c5b4f36" => :mountain_lion
   end
 
   option :universal
-  option "with-relocations", "Build with relocation support for bundles"
 
   depends_on "pkg-config" => :build
   depends_on "glib"
@@ -27,18 +27,13 @@ class GdkPixbuf < Formula
   def install
     ENV.universal_binary if build.universal?
     ENV.append_to_cflags "-DGDK_PIXBUF_LIBDIR=\\\"#{HOMEBREW_PREFIX}/lib\\\""
-    args = ["--disable-dependency-tracking",
-            "--disable-maintainer-mode",
-            "--enable-debug=no",
-            "--prefix=#{prefix}",
-            "--enable-introspection=yes",
-            "--disable-Bsymbolic",
-            "--enable-static",
-            "--without-gdiplus",]
-
-    args << "--enable-relocations" if build.with?("relocations")
-
-    system "./configure", *args
+    system "./configure", "--disable-dependency-tracking",
+                          "--disable-maintainer-mode",
+                          "--enable-debug=no",
+                          "--prefix=#{prefix}",
+                          "--enable-introspection=yes",
+                          "--disable-Bsymbolic",
+                          "--without-gdiplus"
     system "make"
     system "make", "install"
 
@@ -56,21 +51,17 @@ class GdkPixbuf < Formula
 
   def post_install
     # Change the version directory below with any future update
-    if build.with?("relocations")
-      ENV["GDK_PIXBUF_MODULE_FILE"]="#{lib}/gdk-pixbuf-2.0/2.10.0/loaders.cache"
-      ENV["GDK_PIXBUF_MODULEDIR"]="#{HOMEBREW_PREFIX}/lib/gdk-pixbuf-2.0/2.10.0/loaders"
-    end
+    ENV["GDK_PIXBUF_MODULEDIR"]="#{HOMEBREW_PREFIX}/lib/gdk-pixbuf-2.0/2.10.0/loaders"
     system "#{bin}/gdk-pixbuf-query-loaders", "--update-cache"
   end
 
   def caveats; <<-EOS.undent
     Programs that require this module need to set the environment variable
-      export GDK_PIXBUF_MODULE_FILE="#{lib}/gdk-pixbuf-2.0/2.10.0/loaders.cache"
       export GDK_PIXBUF_MODULEDIR="#{HOMEBREW_PREFIX}/lib/gdk-pixbuf-2.0/2.10.0/loaders"
-    If you need to manually update the query loader cache, set these variables then run
+    If you need to manually update the query loader cache, set GDK_PIXBUF_MODULEDIR then run
       #{bin}/gdk-pixbuf-query-loaders --update-cache
     EOS
-  end if build.with?("relocations")
+  end
 
   test do
     system bin/"gdk-pixbuf-csource", test_fixtures("test.png")

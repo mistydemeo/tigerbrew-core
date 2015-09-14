@@ -3,22 +3,22 @@ class Botan < Formula
   homepage "http://botan.randombit.net/"
 
   stable do
-    url "http://botan.randombit.net/releases/Botan-1.10.12.tgz"
-    sha256 "affc3a79919577943f896e64d3e4a4dcc4970c5bf80cc98c7f3a3144745eac27"
+    url "http://botan.randombit.net/releases/Botan-1.10.10.tgz"
+    sha256 "6b67b14746410461fe4a8ce6a625e7eef789243454fe30eab7329d5984be4163"
     # upstream ticket: https://bugs.randombit.net/show_bug.cgi?id=267
     patch :DATA
   end
 
   bottle do
     cellar :any
-    sha256 "b7d45a848fead326d2e0a1dfbcacfd3c73bf0ad4b2ab62611cf78912db4053a7" => :el_capitan
-    sha256 "8dad1bfd83f841d095102056e3b4b769041b4abcb7bd126528f75259cd24f5ff" => :yosemite
-    sha256 "521e1f6578e799f5738c28bfd635cba3f210d777d019a240092bbf912ef83699" => :mavericks
+    sha256 "8a78b816e7523d9a333bb27f9065af459fe42b1df09095e7bcca49724aedf6ad" => :yosemite
+    sha256 "8f59de29b4f33d1fc7eb17101e6832a8441267e5af4b510bf3ffe253e0e79b99" => :mavericks
+    sha256 "021e96762fd63d37cf932422248e44b0a7fad4fc4928e24c82f075b9e770955a" => :mountain_lion
   end
 
   devel do
-    url "http://botan.randombit.net/releases/Botan-1.11.28.tgz"
-    sha256 "a414c96f45b2707d4750d299ca03ec3fce5ada62ada1ba5cd012a9ace61f5932"
+    url "http://botan.randombit.net/releases/Botan-1.11.19.tgz"
+    sha256 "4b0f3be4262bdc71629ea4a38e2ed85ff53e573054ad84ba37d65fc1477b3028"
   end
 
   option "with-debug", "Enable debug build of Botan"
@@ -57,8 +57,9 @@ class Botan < Formula
     if !File.exist? bin/"botan"
       assert_match "lcrypto", shell_output("#{bin}/botan-config-1.10 --libs")
     else
-      assert_match /\A-----BEGIN PRIVATE KEY-----/,
-       shell_output("#{bin}/botan keygen")
+      system bin/"botan", "keygen"
+      File.exist? "public.pem"
+      File.exist? "private.pem"
     end
   end
 end

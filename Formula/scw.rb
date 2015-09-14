@@ -3,29 +3,38 @@ require "language/go"
 class Scw < Formula
   desc "Manage BareMetal Servers from Command Line (as easily as with Docker)"
   homepage "https://github.com/scaleway/scaleway-cli"
-  url "https://github.com/scaleway/scaleway-cli/archive/v1.7.1.tar.gz"
-  sha256 "d63701546806cce3cf68f180b32ae5e0f52e9cf239cf8c2565b29c30c7b300f1"
+  url "https://github.com/scaleway/scaleway-cli/archive/v1.4.0.tar.gz"
+  sha256 "ab7ee002be9557eb2b8075e3b0df340f5e379545152049f2512f1dc2b47b7b8a"
 
   head "https://github.com/scaleway/scaleway-cli.git"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "b51acc7141f5d567ad41da84ba95358d55287a37ff6a06c50628868b87b5bf32" => :el_capitan
-    sha256 "76961fc3752f5643776681ebe3207a2ec537ec5e4586675da6f8b02d7b5b6899" => :yosemite
-    sha256 "8e3f270478dd333bbd2b9a8ff4a4a4b281b691d89e85a56ca6df5d5435997dd0" => :mavericks
+    cellar :any
+    sha256 "6685d169c38c3e629edec78b900a53e24a3d0096ff90d38c7d57ac42026de4ef" => :yosemite
+    sha256 "2c3c748e2c755820bb710caa7461b53483d4f17314e17997fb33e239e3d20014" => :mavericks
+    sha256 "3be8334bace6d1bb8a7ddc69e30f87bbff362264b81a40f3f8f487310c1f9186" => :mountain_lion
   end
 
   depends_on "go" => :build
 
   def install
     ENV["GOPATH"] = buildpath
-    ENV["GOBIN"] = buildpath
-    (buildpath/"src/github.com/scaleway/scaleway-cli").install Dir["*"]
+    ENV["CGO_ENABLED"] = "0"
+    ENV.prepend_create_path "PATH", buildpath/"bin"
 
-    system "go", "build", "-o", "#{bin}/scw", "-v", "-ldflags", "-X  github.com/scaleway/scaleway-cli/pkg/scwversion.GITCOMMIT=homebrew", "github.com/scaleway/scaleway-cli/cmd/scw/"
+    mkdir_p buildpath/"src/github.com/scaleway"
+    ln_s buildpath, buildpath/"src/github.com/scaleway/scaleway-cli"
+    Language::Go.stage_deps resources, buildpath/"src"
 
-    bash_completion.install "src/github.com/scaleway/scaleway-cli/contrib/completion/bash/scw"
-    zsh_completion.install "src/github.com/scaleway/scaleway-cli/contrib/completion/zsh/_scw"
+    inreplace "pkg/scwversion/placeholder.go" do |s|
+      s.gsub! /VERSION = "master"/, "VERSION = \"v#{version}\""
+      s.gsub! /GITCOMMIT = "master"/, "GITCOMMIT = \"v#{version}\""
+    end
+    system "go", "build", "-o", "scw", "./cmd/scw"
+    bin.install "scw"
+
+    bash_completion.install "contrib/completion/bash/scw"
+    zsh_completion.install "contrib/completion/zsh/_scw"
   end
 
   test do

@@ -1,25 +1,15 @@
 class Libspatialite < Formula
   desc "Adds spatial SQL capabilities to SQLite"
   homepage "https://www.gaia-gis.it/fossil/libspatialite/index"
-  revision 2
-
-  stable do
-    url "https://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-4.3.0a.tar.gz"
-    mirror "https://ftp.netbsd.org/pub/pkgsrc/distfiles/libspatialite-4.3.0a.tar.gz"
-    mirror "https://www.mirrorservice.org/sites/ftp.netbsd.org/pub/pkgsrc/distfiles/libspatialite-4.3.0a.tar.gz"
-    sha256 "88900030a4762904a7880273f292e5e8ca6b15b7c6c3fb88ffa9e67ee8a5a499"
-
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/patches/27a0e51936e01829d0a6f3c75a7fbcaf92bb133f/libspatialite/sqlite310.patch"
-      sha256 "459434f5e6658d6f63d403a7795aa5b198b87fc9f55944c714180e7de662fce2"
-    end
-  end
+  url "https://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-4.3.0.tar.gz"
+  sha256 "4acf2d2b891989e61351584fe28514a6561f8f6a1901b988990513be5fe1bdfe"
 
   bottle do
     cellar :any
-    sha256 "3100c637b3ef2b0e0ae9da26300ab478afa2fa9262d35a12121a3938d4515809" => :el_capitan
-    sha256 "287266fa28880f06e6effc8cac49910369c37dc961dce4c5d2b7870c017b1243" => :yosemite
-    sha256 "06f674fa26f7d353ede60de56b52831aba30d3a3f02d3b7dc69affc4db6edbb5" => :mavericks
+    sha256 "503250841e76452904503c5172330e830f901b8f0b04e4941718e9c58f71c192" => :el_capitan
+    sha256 "77993169138d6bb4a185e599b8d55c73a06352ece3461d8b8358a31ed69d9e4e" => :yosemite
+    sha256 "2c2374ee420d33011f2be12bfb9f09b3b2c8cffa63cd0544adf5f5a6c5b2c7b4" => :mavericks
+    sha256 "761b07489fc2591e9e9788b1127253c52025e4208a3cbf78e72afcf9edc58f67" => :mountain_lion
   end
 
   head do
@@ -33,9 +23,7 @@ class Libspatialite < Formula
   option "without-libxml2", "Disable support for xml parsing (parsing needed by spatialite-gui)"
   option "without-liblwgeom", "Build without additional sanitization/segmentation routines provided by PostGIS 2.0+ library"
   option "without-geopackage", "Build without OGC GeoPackage support"
-  option "without-test", "Do not run `make check` prior to installing"
-
-  deprecated_option "without-check" => "without-test"
+  option "without-check", "Do not run `make check` prior to installing"
 
   depends_on "pkg-config" => :build
   depends_on "proj"
@@ -74,21 +62,20 @@ class Libspatialite < Formula
       --disable-dependency-tracking
       --prefix=#{prefix}
       --with-sysroot=#{HOMEBREW_PREFIX}
-      --enable-geocallbacks
     ]
+    args << "--enable-geocallbacks"
     args << "--enable-freexl=no" if build.without? "freexl"
     args << "--enable-libxml2=no" if build.without? "libxml2"
     args << "--enable-lwgeom=yes" if build.with? "liblwgeom"
     args << "--enable-geopackage=no" if build.without? "geopackage"
 
     system "./configure", *args
-    system "make", "check" if build.with? "test"
+    system "make", "check" if build.with? "check"
     system "make", "install"
   end
 
   test do
     # Verify mod_spatialite extension can be loaded using Homebrew's SQLite
-    pipe_output("#{Formula["sqlite"].opt_bin}/sqlite3",
-      "SELECT load_extension('#{opt_lib}/mod_spatialite');")
+    system "echo \"SELECT load_extension('#{opt_lib}/mod_spatialite');\" | #{Formula["sqlite"].opt_bin}/sqlite3"
   end
 end

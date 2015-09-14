@@ -1,18 +1,17 @@
 class H2o < Formula
   desc "HTTP server with support for HTTP/1.x and HTTP/2"
   homepage "https://github.com/h2o/h2o/"
-  url "https://github.com/h2o/h2o/archive/v1.7.0.tar.gz"
-  sha256 "d11eef4590b2f4cdf13bb27a27c9605e59e50f54a710d2080d4c68e3bde77544"
+  url "https://github.com/h2o/h2o/archive/v1.4.4.tar.gz"
+  sha256 "0297ca73dba460653c6edb14dab17095f60616baf7c51e45ac9f8a6d54b9ba55"
   head "https://github.com/h2o/h2o.git"
 
   bottle do
-    sha256 "da87c90826e9216260caefd85343d4d811780d456e11cff4dd73f9d92518c2f9" => :el_capitan
-    sha256 "f349af292e3ddfa549c9f35203f64fd97f8845c41622f236d27f0dd3298629ba" => :yosemite
-    sha256 "719e1a710447ad9a6160ea502a47bd8a81bea29d6f17659c33bb8d3b57fad582" => :mavericks
+    sha256 "35a1d5213113ced013250c3986b54211725330a4d7cc92d71301b4a7eb00bf69" => :yosemite
+    sha256 "9ddd4573c70cd12263268c444a61d7cb0f66f252714092989a8dcccdaf46e1d0" => :mavericks
+    sha256 "895047211acaf3fff7c39c641b17aa75b3289f894ea9a436fbf9bf53c7aaaa01" => :mountain_lion
   end
 
   option "with-libuv", "Build the H2O library in addition to the executable"
-  option "without-mruby", "Don't build the bundled statically-linked mruby"
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
@@ -20,11 +19,12 @@ class H2o < Formula
   depends_on "libressl" => :optional
   depends_on "libuv" => :optional
   depends_on "wslay" => :optional
+  depends_on "mruby" => :optional
 
   def install
     args = std_cmake_args
     args << "-DWITH_BUNDLED_SSL=OFF"
-    args << "-DWITH_MRUBY=OFF" if build.without? "mruby"
+    args << "-DWITH_MRUBY=ON" if build.with? "mruby"
 
     system "cmake", *args
 
@@ -85,16 +85,6 @@ class H2o < Formula
   end
 
   test do
-    pid = fork do
-      exec "#{bin}/h2o -c #{etc}/h2o/h2o.conf"
-    end
-    sleep 2
-
-    begin
-      assert_match "Welcome to H2O", shell_output("curl localhost:8080")
-    ensure
-      Process.kill("SIGINT", pid)
-      Process.wait(pid)
-    end
+    system bin/"h2o", "--version"
   end
 end

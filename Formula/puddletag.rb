@@ -1,17 +1,16 @@
 class Puddletag < Formula
   desc "Powerful, simple, audio tag editor."
   homepage "http://puddletag.sf.net"
-  url "https://github.com/keithgg/puddletag/archive/1.1.1.tar.gz"
-  sha256 "550680abf9c2cf082861dfb3b61fd308f87f9ed304065582cddadcc8bdd947cc"
-  revision 2
+  url "https://github.com/keithgg/puddletag/archive/v1.0.5.tar.gz"
+  sha256 "f94ebcc4ed31389574c187197b99256bec1f96e1e7d4dd61730e88f79deeaba2"
 
   head "https://github.com/keithgg/puddletag.git"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "2f97b0687f8eacab3188d6e2ec595f267f862efed2701e51b39a2bf81bf508bb" => :el_capitan
-    sha256 "80ad92bbf1cdaaed786063b7fc2ef78e1b652a70efbc882e1fd2c5828e3d302d" => :yosemite
-    sha256 "52b3b94916fe4943df8962f63534093a7f9a9b7f6c5e0ed4869d23b51ccd908f" => :mavericks
+    cellar :any
+    sha256 "a68e0d8951475db3151e8bbd91a66028200ea2bd18363fcd37a6d9191e693633" => :yosemite
+    sha256 "64fbfbe641417db9cf8544360628c15894e633a48b81765033f0f2f404876419" => :mavericks
+    sha256 "c5ff96058a4f5262822327108318549a76beeaef4c39715944a22b30bdd19280" => :mountain_lion
   end
 
   depends_on :python if MacOS.version <= :snow_leopard
@@ -19,18 +18,18 @@ class Puddletag < Formula
   depends_on "chromaprint" => :recommended
 
   resource "pyparsing" do
-    url "https://pypi.python.org/packages/source/p/pyparsing/pyparsing-2.1.0.tar.gz"
-    sha256 "f6cb2bc85a491347c3c699db47f7ecc02903959156b4f92669ebf82395982901"
+    url "https://pypi.python.org/packages/source/p/pyparsing/pyparsing-1.5.7.tar.gz"
+    sha256 "646e14f90b3689b005c19ac9b6b390c9a39bf976481849993e277d7380e6e79f"
   end
 
   resource "mutagen" do
-    url "https://bitbucket.org/lazka/mutagen/downloads/mutagen-1.31.tar.gz"
-    sha256 "0aa011707785fe30935d8655380052a20ba8b972aa738d4f144c457b35b4d699"
+    url "https://bitbucket.org/lazka/mutagen/downloads/mutagen-1.21.tar.gz"
+    sha256 "4dd30af3a291c0a152838f2bbf1d592bf6ede752b11a159cbf84e75815bcc2b5"
   end
 
   resource "configobj" do
-    url "https://pypi.python.org/packages/source/c/configobj/configobj-5.0.6.tar.gz"
-    sha256 "a2f5650770e1c87fb335af19a9b7eb73fc05ccf22144eb68db7d00cd2bcb0902"
+    url "https://pypi.python.org/packages/source/c/configobj/configobj-5.0.5.tar.gz"
+    sha256 "766eff273f2cbb007a3ea8aa69429ee9b1553aa96fe282c6ace3769b9ac47b08"
   end
 
   def install
@@ -42,18 +41,13 @@ class Puddletag < Formula
     end
 
     cp_r buildpath/"source/.", buildpath
-
     ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python2.7/site-packages"
     system "python", *Language::Python.setup_install_args(libexec)
 
     ENV.prepend_create_path "PYTHONPATH", HOMEBREW_PREFIX/"lib/python2.7/site-packages"
 
     bin.install Dir[libexec/"bin/*"]
-    bin.env_script_all_files(libexec/"bin", :PATH => "#{HOMEBREW_PREFIX}/bin", :PYTHONPATH => ENV["PYTHONPATH"])
-
-    system "sh", "create_macos_app_bundle.sh", "--name", "Puddletag",
-                 "--icon", "puddletag.png", "--script", "#{bin}/puddletag"
-    prefix.install "Puddletag.app"
+    bin.env_script_all_files(libexec/"bin", :PYTHONPATH => ENV["PYTHONPATH"])
   end
 
   test do

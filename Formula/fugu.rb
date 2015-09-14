@@ -7,30 +7,36 @@ class Fugu < Formula
   sha256 "94ec61037c3afa1267ea990ffd03ba1d0d1628926b3fdde0133fece36fa81929"
 
   bottle do
-    cellar :any_skip_relocation
-    revision 2
-    sha256 "51b5d051688093ffd7f44ab20599e01d236903d7c92f9d1765bd8ebce26a9dcb" => :el_capitan
-    sha256 "76925e369d03b49158a9a55fe71d513b2f01c11c317ccc3ff3a166cd3790096c" => :yosemite
-    sha256 "afaf8a3af2fa2cd5a7482fedd449abc9bd13a4d88d805c99c4f9b797a6329887" => :mavericks
+    cellar :any
+    sha256 "ea7fc32f2683bd6902bdddb3bcd9a51bf40fce495e3aeb5d52e493d57a928c9b" => :yosemite
+    sha256 "7f0774ebb3abec005f5c0e44cb3a2e574d3382ee33bf43ae6b4981e1ab80907a" => :mavericks
+    sha256 "547f6aa26659e6f13a2dd0b83b1d95e375f905d52a5447bf797a4395386e37c0" => :mountain_lion
   end
 
   depends_on "go" => :build
-  depends_on "godep" => :build
   depends_on "docker" => :recommended
+
+  go_resource "github.com/tools/godep" do
+    url "https://github.com/tools/godep.git", :revision => "e2d1eb1649515318386cc637d8996ab37d6baa5e"
+  end
 
   go_resource "github.com/kr/fs" do
     url "https://github.com/kr/fs.git", :revision => "2788f0dbd16903de03cb8186e5c7d97b69ad387b"
   end
 
   def install
-    ENV["GOPATH"] = buildpath
-    ENV["GO15VENDOREXPERIMENT"] = "0"
     mkdir_p buildpath/"src/github.com/mattes/"
     ln_s buildpath, buildpath/"src/github.com/mattes/fugu"
+
+    ENV["GOPATH"] = buildpath
     Language::Go.stage_deps resources, buildpath/"src"
 
+    cd buildpath/"src/github.com/tools/godep" do
+      system "go", "install"
+    end
+
     cd buildpath/"fugu" do
-      system "godep", "go", "build", "-o", bin/"fugu", "main.go", "usage.go", "version.go"
+      system buildpath/"bin/godep", "go", "build", "-o", bin/"fugu", "main.go", "usage.go", "version.go"
     end
   end
 

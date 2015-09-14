@@ -1,16 +1,19 @@
+# GnuTLS has previous, current, and next stable branches, we use current.
+# From 3.4.0 GnuTLS will be permanently disabling SSLv3. Every brew uses will need a revision with that.
+# http://nmav.gnutls.org/2014/10/what-about-poodle.html
 class Gnutls < Formula
   desc "GNU Transport Layer Security (TLS) Library"
-  homepage "http://gnutls.org/"
-  url "ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/gnutls-3.4.9.tar.xz"
-  mirror "https://gnupg.org/ftp/gcrypt/gnutls/v3.4/gnutls-3.4.9.tar.xz"
-  mirror "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v3.4/gnutls-3.4.9.tar.xz"
-  sha256 "48594fadba33d450f796ec69526cf2bce6ff9bc3dc90fbd7bf38dc3601f57c3f"
+  homepage "http://gnutls.org"
+  url "ftp://ftp.gnutls.org/gcrypt/gnutls/v3.3/gnutls-3.3.17.1.tar.xz"
+  mirror "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v3.3/gnutls-3.3.17.1.tar.xz"
+  sha256 "b40f158030a92f450a07b20300a3996710ca19800848d9f6fd62493170c5bbb4"
 
   bottle do
     cellar :any
-    sha256 "cf6c87f91362a8d7537772264081fe62a4b4e98c36dd553c8ad49b511b11a4d7" => :el_capitan
-    sha256 "2ecaa12e65ee121744faedea9dab69a199fb595cd9036aa8ae3701627254577f" => :yosemite
-    sha256 "47b07ecbdf219d9d68d5fdb49d0a67a809e731c64c9b374c04815b02f33c7224" => :mavericks
+    sha256 "619dda7c714dd66c54d8fe6c58e1c0060e9eaacbac1cc9498e3d7c5b3088a3d0" => :el_capitan
+    sha256 "4cdb3be227283ce8f939f5b36b952d85af26150986c465c980c9df4356b1e3f4" => :yosemite
+    sha256 "163f2ba093399402f690d722d49023109360f9a8f0412d3d50ba7385988cc248" => :mavericks
+    sha256 "c45005f683e63962edd3c5caf71834d3c82647167653b5f9dc617dbf97fab624" => :mountain_lion
   end
 
   depends_on "pkg-config" => :build
@@ -18,6 +21,7 @@ class Gnutls < Formula
   depends_on "gmp"
   depends_on "nettle"
   depends_on "guile" => :optional
+  depends_on "p11-kit" => :optional
   depends_on "unbound" => :optional
 
   fails_with :llvm do
@@ -34,7 +38,6 @@ class Gnutls < Formula
       --sysconfdir=#{etc}
       --with-default-trust-store-file=#{etc}/openssl/cert.pem
       --disable-heartbeat-support
-      --without-p11-kit
     ]
 
     if build.with? "guile"

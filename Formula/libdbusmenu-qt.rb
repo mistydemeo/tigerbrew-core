@@ -6,12 +6,13 @@ class LibdbusmenuQt < Formula
 
   depends_on "cmake" => :build
   depends_on "doxygen" => :build
-  depends_on "qt" => "with-d-bus"
+  depends_on "qt"
   depends_on "qjson"
 
   def install
     mkdir "macbuild" do
-      system "cmake", "..", *std_cmake_args
+      args = std_cmake_args + [".."]
+      system "cmake", *args
       system "make", "install"
     end
   end

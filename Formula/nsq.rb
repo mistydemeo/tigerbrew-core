@@ -3,16 +3,16 @@ require "language/go"
 class Nsq < Formula
   desc "Realtime distributed messaging platform"
   homepage "http://nsq.io"
-  url "https://github.com/nsqio/nsq/archive/v0.3.7.tar.gz"
-  sha256 "fb71e28c757dd485b43b9bc75d90eb44ff9166ccb3d8a928c5e655b483da316e"
+  url "https://github.com/bitly/nsq/archive/v0.3.5.tar.gz"
+  sha256 "4120ad24e3700be1e65549b9a55eab5d4e744cd114d9b39779a47b6dedda0b35"
 
-  head "https://github.com/nsqio/nsq.git"
+  head "https://github.com/bitly/nsq.git"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "91a000705ffecf918ce61962a624e7420fcd241a528d8682acdf44e47791c4fa" => :el_capitan
-    sha256 "eaebbc4585c48399e709c81a83c29f974dcc237efa80e3b2ee42708da3494149" => :yosemite
-    sha256 "cc993cfc69b4104b71536b1d069cf102e7f11b50410395048ca9f1b88ff48c8b" => :mavericks
+    cellar :any
+    sha256 "eb9dd459eec6603dd720b58b8fcee5ccfc122999aed51845ff2c98e0bb3fabfe" => :yosemite
+    sha256 "b17656e4e8b93abf9d6b0b65b614ffa7fecc2b0920a8d0329aa6abda2e5a2f7e" => :mavericks
+    sha256 "dd00b16b6708fd69764ec0276568f88b4d3c8729c6be45859b3450b313a0f3b6" => :mountain_lion
   end
 
   depends_on "go" => :build
@@ -27,14 +27,14 @@ class Nsq < Formula
       :revision => "58b95b10d6ca26723a7f46017b348653b825a8d6"
   end
 
-  go_resource "github.com/nsqio/go-nsq" do
-    url "https://github.com/nsqio/go-nsq.git",
-      :revision => "cef6982c1150617a77539847950ca63774f0e48c"
+  go_resource "github.com/bitly/go-nsq" do
+    url "https://github.com/bitly/go-nsq.git",
+      :revision => "22a8bd48c443ec23bb559675b6df8284bbbdab29"
   end
 
   go_resource "github.com/bitly/go-simplejson" do
     url "https://github.com/bitly/go-simplejson.git",
-      :revision => "18db6e68d8fd9cbf2e8ebe4c81a78b96fd9bf05a"
+      :revision => "fc395a5db941cf38922b1ccbc083640cd76fe4bc"
   end
 
   go_resource "github.com/bmizerany/perks" do
@@ -62,27 +62,15 @@ class Nsq < Formula
       :revision => "9bf7bff48b0388cb75991e58c6df7d13e982f1f2"
   end
 
-  go_resource "github.com/julienschmidt/httprouter" do
-    url "https://github.com/julienschmidt/httprouter.git",
-      :revision => "6aacfd5ab513e34f7e64ea9627ab9670371b34e7"
-  end
-
-  go_resource "github.com/judwhite/go-svc" do
-    url "https://github.com/judwhite/go-svc.git",
-      :revision => "53bd3020e68399b23994ce23d1130801aa674226"
-  end
-
   def install
     # build a proper GOPATH tree for local dependencies
-    (buildpath + "src/github.com/nsqio/nsq").install "Makefile", "apps", "internal", "nsqlookupd", "nsqd", "nsqadmin"
+    (buildpath + "src/github.com/bitly/nsq").install "internal", "nsqlookupd", "nsqd", "nsqadmin"
 
     ENV["GOPATH"] = buildpath
     Language::Go.stage_deps resources, buildpath/"src"
 
-    cd buildpath/"src/github.com/nsqio/nsq" do
-      system "make"
-      system "make", "DESTDIR=#{prefix}", "PREFIX=", "install"
-    end
+    system "make"
+    system "make", "DESTDIR=#{prefix}", "PREFIX=", "install"
   end
 
   test do

@@ -15,18 +15,17 @@ class Casperjs < Formula
   end
 
   bottle do
-    cellar :any_skip_relocation
+    cellar :any
     revision 1
-    sha256 "a6f6140bcaceabae529d04ddeb152568575091e797b741be8e604e4030e31063" => :el_capitan
     sha256 "e4ad0b7e9f7c8b1a65142a5ac3a82e0adc7f571ba32192019898d0d854362ef5" => :yosemite
     sha256 "dc0297e379af5b10c3ef6e7d8ac00610adf7cb17bf8b1790a7d41b56a0e9692b" => :mavericks
     sha256 "fc20c22ec10d175d84bec4dd05d83fa8ea7fc78723a4e8d0f4041d5c00878651" => :mountain_lion
   end
 
   devel do
-    url "https://github.com/n1k0/casperjs/archive/1.1-beta4.tar.gz"
-    sha256 "144e9a32d8ca677419924f6183aad26e0061d2c08d79abdb998796c010553654"
-    version "1.1-beta4"
+    url "https://github.com/n1k0/casperjs/archive/1.1-beta3.tar.gz"
+    sha256 "bc286424fb52df6cf16cb9b8ef6534ee830bb8ab0b87d2625910d8c1824152dc"
+    version "1.1-beta3"
 
     resource "phantomjs" do
       url "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-macosx.zip"

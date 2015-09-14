@@ -1,23 +1,22 @@
 class Pngquant < Formula
   desc "PNG image optimizing utility"
   homepage "https://pngquant.org/"
-  url "https://pngquant.org/pngquant-2.6.0-src.tar.gz"
-  sha256 "79e0b2f08260fb3f0fc131c1ac17e26d9e207b36fbd3734f980957457b8492a7"
+  url "https://pngquant.org/pngquant-2.5.0-src.tar.bz2"
+  sha256 "83c941f9fc7d4d6a566ca1243bff38fc9c46e4c74b6dc352fb5eac68b2297839"
   head "https://github.com/pornel/pngquant.git"
 
   bottle do
     cellar :any
-    sha256 "72c9b1340402476453463844617ceccbd8961d055a31a0c34e55e88d035c1fc2" => :el_capitan
-    sha256 "1a389dba5a828609571acb3ca71332ef0363ea07bde8b82ed87a30d7c77ac9c6" => :yosemite
-    sha256 "d6b5ef4c1593ad620e1a3cc3d7fb2f082e6e763883a36b353e4d068881cea9a4" => :mavericks
+    sha256 "35d5b9ee2b42ba45baa378fed42e69cf2dfb74f04eaf8b7286426a314ab23a4e" => :yosemite
+    sha256 "152ba12f6637125935f2f3bbcdfeb0f056f20ada21931859f1507cb6f9ebf417" => :mavericks
+    sha256 "39f9bb7d8b6289bfdb8809a3bd48af52a3760ab268e98f1a8fa89078dd4c050e" => :mountain_lion
   end
-
-  option "with-openmp", "Enable OpenMP"
 
   depends_on "pkg-config" => :build
   depends_on "libpng"
   depends_on "little-cms2" => :optional
 
+  option "with-openmp", "Enable OpenMP"
   needs :openmp if build.with? "openmp"
 
   def install

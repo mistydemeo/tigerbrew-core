@@ -3,12 +3,13 @@ class Mediatomb < Formula
   homepage "http://mediatomb.cc"
   url "https://downloads.sourceforge.net/mediatomb/mediatomb-0.12.1.tar.gz"
   sha256 "31163c34a7b9d1c9735181737cb31306f29f1f2a0335fb4f53ecccf8f62f11cd"
-  revision 2
+  revision 1
 
   bottle do
-    sha256 "053bb9e89b98bc5af6ca6eb5c4284a551d7d8a3130d933374a91538a881f14c0" => :el_capitan
-    sha256 "de299b1bb82354e275e19b6690a05d6290ddbf361fb3b48d1c136091d6e80aae" => :yosemite
-    sha256 "9bc0082e21fde91100793c656aeb4017fd9704899d33d17a7e1936c7d47b265a" => :mavericks
+    revision 1
+    sha256 "b0f105e9a23ca52fa5e914cd640a01cc01e62017f92c2eb6909eaa70d255e1b7" => :yosemite
+    sha256 "31ed936a085dff1100865568277e684d38d81b0660adda723468979ea8529f01" => :mavericks
+    sha256 "ad6b31147acbd05b2991aa1ebd077d281060c0867f95ba5e75fe9e982e01d4a8" => :mountain_lion
   end
 
   depends_on "libexif" => :recommended
@@ -25,6 +26,10 @@ class Mediatomb < Formula
   depends_on "lastfmlib" => :optional
   depends_on "mysql" => :optional
 
+  fails_with :clang do
+    cause "src/timer.h:82:18: note: implicit instantiation first required here"
+  end
+
   # This is for libav 0.7 support. See:
   # https://bugs.launchpad.net/ubuntu/+source/mediatomb/+bug/784431
   # http://sourceforge.net/tracker/?func=detail&aid=3291062&group_id=129766&atid=715780
@@ -34,7 +39,7 @@ class Mediatomb < Formula
   end
 
   patch do
-    url "https://ftp.heanet.ie/mirrors/fink/finkinfo/10.7/stable/main/finkinfo/net/mediatomb.patch"
+    url "http://ftp.heanet.ie/mirrors/fink/finkinfo/10.7/stable/main/finkinfo/net/mediatomb.patch"
     sha256 "7e8ef3e1bec9a045549b468a3441f9d3d7bb42a7e77564a5fedea2d6024303ea"
   end
 
@@ -61,14 +66,6 @@ class Mediatomb < Formula
   patch do
     url "https://sourceforge.net/p/mediatomb/patches/46/attachment/object.diff"
     sha256 "b289e77a5177aa66da45bdb50e5f04c94fb1b8d14c83faa72251ccae8680a1d3"
-  end
-
-  # FreeBSD patch to fix Clang compile.
-  # https://svnweb.freebsd.org/ports/head/net/mediatomb/files/patch-timer.cc?revision=397755&view=markup
-  # Noted here with the GCC patch: https://sourceforge.net/p/mediatomb/patches/46/#54bc
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/patches/d316eac2/mediatomb/timercc.diff"
-    sha256 "e1ea57ca4b855b78c70de1e5041ecfa46521a19bd95d2594efe7e6f69014baca"
   end
 
   def install

@@ -1,29 +1,29 @@
 class GstPluginsBad < Formula
   desc "GStreamer plugins (less supported, missing docs, not fully tested)"
-  homepage "https://gstreamer.freedesktop.org/"
-  url "https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.6.3.tar.xz"
-  sha256 "971b29101d6a9c5e3fe94d99d977a227f58f0b2d29b6ca2c7f292052542b3a61"
+  homepage "http://gstreamer.freedesktop.org/"
+  url "http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.4.5.tar.xz"
+  mirror "http://ftp.osuosl.org/pub/blfs/svn/g/gst-plugins-bad-1.4.5.tar.xz"
+  sha256 "152fad7250683d72f9deb36c5685428338365fe4a4c87ffe15e38783b14f983c"
 
   bottle do
-    sha256 "f464a92a3bd3066094abdbce011b3ee378fa5ce049c7fd551724ec2c5b04c098" => :el_capitan
-    sha256 "e4efd9f1bd09ee72752cf1d36f182df201dedda78f185979074521b2ef22352c" => :yosemite
-    sha256 "d129f8dbb129eeef35a192c287fe43c7a7f04fdbcba7ac68c20f257f86801cd8" => :mavericks
+    revision 1
+    sha256 "c4cb9cf4187786a73e43618260378e3db8cff3887acf3f352a1a549373f0340d" => :yosemite
+    sha256 "5280b336808a878ba93477d5664d6f784e2f78f6880b5ea267adcd93e7e7f38b" => :mavericks
+    sha256 "1de5eb524831527facb2f91df2c8b7292aca6d7e72f3c454116f3c67989edcba" => :mountain_lion
   end
 
   head do
-    url "https://anongit.freedesktop.org/git/gstreamer/gst-plugins-bad.git"
+    url "git://anongit.freedesktop.org/gstreamer/gst-plugins-bad"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
     depends_on "libtool" => :build
+    depends_on "openssl"
   end
-
-  option "with-applemedia", "Build with applemedia support"
 
   depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "gst-plugins-base"
-  depends_on "openssl"
 
   depends_on "dirac" => :optional
   depends_on "faac" => :optional
@@ -37,7 +37,8 @@ class GstPluginsBad < Formula
   depends_on "rtmpdump" => :optional
   depends_on "schroedinger" => :optional
   depends_on "sound-touch" => :optional
-  depends_on "srtp" => :optional
+
+  option "with-applemedia", "Build with applemedia support"
 
   def install
     args = %W[

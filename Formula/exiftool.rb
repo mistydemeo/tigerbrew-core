@@ -1,27 +1,36 @@
 class Exiftool < Formula
   desc "Perl lib for reading and writing EXIF metadata"
   homepage "http://www.sno.phy.queensu.ca/~phil/exiftool/index.html"
-  url "http://www.sno.phy.queensu.ca/~phil/exiftool/Image-ExifTool-10.11.tar.gz"
-  sha256 "8cf8b2ec192fdbec5e1946bcf1ed9c7c681e6d16896298bbf7adb8eb59356729"
+  url "http://www.sno.phy.queensu.ca/~phil/exiftool/Image-ExifTool-10.00.tar.gz"
+  sha256 "7b573331eba3921b56339018e95dd5e6f5a1e4634e4fc7bad91e5778da3571f4"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "6ba5c8524d2462d8a6608ebffef9c4e2b8fa923d809c4292c044768a7d9db809" => :el_capitan
-    sha256 "d76b0cd4853457378e8d527419e8cea8a5d8e63487e75a43c943ee943a4caed9" => :yosemite
-    sha256 "28920f699adb9e45ec79a9e504721b7984f1a9c82309bfdf0ad1917480e88057" => :mavericks
+    cellar :any
+    sha256 "1bb061e6f38466bbbe8b59787c9bf6e29532c12db4b7762a48d8d96923929cfb" => :yosemite
+    sha256 "84f4222a30768b0c9891a1a32912d8f62ff64b26d3285c89774a8056f8843824" => :mavericks
+    sha256 "b0d3125dcfa56ffc2417ccbe40558257f634914821fbe86ae7c2a263276a7bec" => :mountain_lion
   end
 
   def install
-    # replace the hard-coded path to the lib directory
-    inreplace "exiftool", "$exeDir/lib", "#{libexec}/lib"
-
     system "perl", "Makefile.PL"
+    system "make", "test"
 
-    libexec.install "lib"
-    bin.install "exiftool"
+    # Install privately to the Cellar
+    libexec.install "exiftool", "lib"
+
+    # Link the executable script into "bin"
+    (bin + "exiftool").write <<-EOBIN
+#!/bin/bash
+
+which_exiftool=`which $0`
+dirname_exiftool=$(dirname $which_exiftool)
+readlink_exiftool=$(readlink $which_exiftool)
+dirname_unlinked_exiftool=$(dirname $dirname_exiftool/$readlink_exiftool)
+$dirname_unlinked_exiftool/../libexec/exiftool "$@"
+EOBIN
   end
 
   test do
-    system "#{bin}/exiftool"
+    system "#{libexec}/exiftool"
   end
 end

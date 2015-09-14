@@ -1,15 +1,14 @@
 class Uhd < Formula
   desc "Hardware driver for all USRP devices."
   homepage "http://files.ettus.com/manual/"
-  url "https://github.com/EttusResearch/uhd/archive/release_003_009_001.tar.gz"
-  sha256 "e2059c34bea2aaca31eb8d3501ce7b535b559775d3050ed5c30946c34146a92e"
+  url "https://github.com/EttusResearch/uhd/archive/release_003_009_000.tar.gz"
+  sha256 "36acbad244270972446383c64577aa9c6171cfee7e9e94a300c287454c736a05"
   head "https://github.com/EttusResearch/uhd.git"
-  revision 2
 
   bottle do
-    sha256 "a9219e143155d880befb4d46684a18838ad1671b5088372222ad67ff5c5c44cf" => :el_capitan
-    sha256 "ed9abd856281bcd07827a460f9f04b8cffa9dca31ed4eb360721bb833e15b7ec" => :yosemite
-    sha256 "7cc29536d0d8c679a9db0251cc0e08223de79e37bec368996abff5657fcea9b5" => :mavericks
+    sha256 "f8da1e24e138f9f19efc7ba7c1040a468d0860a2afedf0e9e098957879935279" => :yosemite
+    sha256 "93d052af92640e75ae411c8721ea79e6d1581fffd78a8695b9c38bd95d2c34d6" => :mavericks
+    sha256 "252ba91714607cccee3ad1a6917e8efd40c10170f9f1c5ca9a6f21672d26aaf2" => :mountain_lion
   end
 
   option :universal

@@ -1,34 +1,21 @@
 class Dovecot < Formula
   desc "IMAP/POP3 server"
   homepage "http://dovecot.org/"
-  url "http://dovecot.org/releases/2.2/dovecot-2.2.21.tar.gz"
-  mirror "https://fossies.org/linux/misc/dovecot-2.2.21.tar.gz"
-  sha256 "7ab7139e59e1f0353bf9c24251f13c893cf1a6ef4bcc47e2d44de437108d0b20"
+  url "http://dovecot.org/releases/2.2/dovecot-2.2.18.tar.gz"
+  mirror "https://fossies.org/linux/misc/dovecot-2.2.18.tar.gz"
+  sha256 "b6d8468cea47f1227f47b80618f7fb872e2b2e9d3302adc107a005dd083865bb"
 
   bottle do
-    revision 2
-    sha256 "280a50a51c3025c49cbb8682baa39c512451ec5c3d7ea4be119a1351b14e925b" => :el_capitan
-    sha256 "4c9e79a80a3f696f87e9ce4e94015cd3c131f43253d7f546792fefecca461fd9" => :yosemite
-    sha256 "84d4d5d7f6aa337c0ef0e79af8576fbda93d2c41e1940509dd6bcd8b34b58f80" => :mavericks
+    revision 1
+    sha256 "b0213868f3a9db6992b04d688209c8d35aa472beeb2fd03b937f112857e7f0c0" => :yosemite
+    sha256 "03c6c26881f816b9206efe6ff97df76ceb179696466f8f177ce3d625ad270e2c" => :mavericks
+    sha256 "54ed311a625d029291a644117a3a16c0d9b5ab1158c0ceffe229635ca3a62008" => :mountain_lion
   end
-
-  option "with-pam", "Build with PAM support"
-  option "with-pigeonhole", "Add Sieve addon for Dovecot mailserver"
-  option "with-pigeonhole-unfinished-features", "Build unfinished new Sieve addon features/extensions"
-  option "with-stemmer", "Build with libstemmer support"
 
   depends_on "openssl"
   depends_on "clucene" => :optional
 
-  resource "pigeonhole" do
-    url "http://pigeonhole.dovecot.org/releases/2.2/dovecot-2.2-pigeonhole-0.4.12.tar.gz"
-    sha256 "98a2fd79b0d9effd08c0caf04d483b1caa5e4503dae811e6d436948557bfb702"
-  end
-
-  resource "stemmer" do
-    url "https://github.com/snowballstem/snowball.git",
-      :revision => "3b1f4c2ac4b924bb429f929d9decd3f50662a6e0"
-  end
+  option "with-pam", "Build with PAM support"
 
   def install
     args = %W[
@@ -46,33 +33,8 @@ class Dovecot < Formula
     args << "--with-lucene" if build.with? "clucene"
     args << "--with-pam" if build.with? "pam"
 
-    if build.with? "stemmer"
-      args << "--with-libstemmer"
-
-      resource("stemmer").stage do
-        system "make", "dist_libstemmer_c"
-        system "tar", "xzf", "dist/libstemmer_c.tgz", "-C", buildpath
-      end
-    end
-
-    system "./configure", *args
+    system "./configure",  *args
     system "make", "install"
-
-    if build.with? "pigeonhole"
-      resource("pigeonhole").stage do
-        args = %W[
-          --disable-dependency-tracking
-          --with-dovecot=#{lib}/dovecot
-          --prefix=#{prefix}
-        ]
-
-        args << "--with-unfinished-features" if build.with? "pigeonhole-unfinished-features"
-
-        system "./configure", *args
-        system "make"
-        system "make", "install"
-      end
-    end
   end
 
   plist_options :startup => true

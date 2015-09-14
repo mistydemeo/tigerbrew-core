@@ -1,14 +1,13 @@
 class Libsoup < Formula
   desc "HTTP client/server library for GNOME"
   homepage "https://live.gnome.org/LibSoup"
-  url "https://download.gnome.org/sources/libsoup/2.52/libsoup-2.52.2.tar.xz"
-  sha256 "db55628b5c7d952945bb71b236469057c8dfb8dea0c271513579c6273c2093dc"
-  revision 1
+  url "https://download.gnome.org/sources/libsoup/2.50/libsoup-2.50.0.tar.xz"
+  sha256 "1e01365ac4af3817187ea847f9d3588c27eee01fc519a5a7cb212bb78b0f667b"
 
   bottle do
-    sha256 "de28079d444082ea4f6f2aca4388152aa8d303926917baa5f656bdd7d222ef72" => :el_capitan
-    sha256 "20307b7b63cc31b13243d5c69352a650ddb9c814f7ed3da4e25eaf5658488d95" => :yosemite
-    sha256 "5906c25c1cc3da2f65759625853be406fda083a8551129b79141196dbb63c81c" => :mavericks
+    sha256 "ee2c2f86d70ad5773bdd8163138f30b7dc9b362753a46080309e7824d465e13a" => :yosemite
+    sha256 "844f476c44c391a4d8f4fdb3e6178cc12b4d8ba5a01dce7671f0cc6d27e0983c" => :mavericks
+    sha256 "7f197f9fd8a36fa97d01830e3beb6973ba5dc2a654f924ee45e226a56be80574" => :mountain_lion
   end
 
   depends_on "pkg-config" => :build
@@ -16,8 +15,7 @@ class Libsoup < Formula
   depends_on "glib-networking"
   depends_on "gnutls"
   depends_on "sqlite"
-  depends_on "gobject-introspection"
-  depends_on "vala"
+  depends_on "gobject-introspection" => :recommended
 
   def install
     args = [
@@ -26,11 +24,15 @@ class Libsoup < Formula
       "--disable-silent-rules",
       "--prefix=#{prefix}",
       "--without-gnome",
-      "--disable-tls-check",
+      "--disable-tls-check"
     ]
 
-    # ensures that the vala files remain within the keg
-    inreplace "libsoup/Makefile.in", "VAPIDIR = @VAPIDIR@", "VAPIDIR = @datadir@/vala/vapi"
+    if build.with? "gobject-introspection"
+      args << "--enable-introspection"
+    else
+      args << "--disable-introspection"
+    end
+
     system "./configure", *args
     system "make", "install"
   end

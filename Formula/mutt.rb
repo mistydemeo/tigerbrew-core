@@ -16,17 +16,16 @@ class Mutt < Formula
   sha256 "a292ca765ed7b19db4ac495938a3ef808a16193b7d623d65562bb8feb2b42200"
 
   bottle do
-    revision 2
-    sha256 "5bb0c9590b522bbcc38bfecaf0561810db2660792f472aa12a3b6c8f5e5b28d7" => :el_capitan
-    sha256 "8cad91b87b615984871b6bed35a029edcef006666bc7cf3b8f6b8b74d91c5b97" => :yosemite
-    sha256 "c57d868588eb947002902c90ee68af78298cbb09987e0150c1eea73f9e574cce" => :mavericks
+    sha256 "9d83e71eeca14f5494a07abd68b6a723928cf415157dbf070461a10d0a0d89ae" => :yosemite
+    sha256 "28b3aa2d69d4eb12da355f7639c3e7eb4124337ff0c0d91477b4dd75c161ac67" => :mavericks
+    sha256 "3ed3daff645991c2f4a7f3eb91b6f65facced496e4d1aa28584f1cad29081763" => :mountain_lion
   end
 
   head do
-    url "https://dev.mutt.org/hg/mutt#default", :using => :hg
+    url "http://dev.mutt.org/hg/mutt#default", :using => :hg
 
     resource "html" do
-      url "https://dev.mutt.org/doc/manual.html", :using => :nounzip
+      url "http://dev.mutt.org/doc/manual.html", :using => :nounzip
     end
   end
 
@@ -48,10 +47,8 @@ class Mutt < Formula
 
   depends_on "openssl"
   depends_on "tokyo-cabinet"
-  depends_on "gettext" => :optional
-  depends_on "gpgme" => :optional
-  depends_on "libidn" => :optional
   depends_on "s-lang" => :optional
+  depends_on "gpgme" => :optional
 
   # original source for this went missing, patch sourced from Arch at
   # https://aur.archlinux.org/packages/mutt-ignore-thread/
@@ -70,30 +67,23 @@ class Mutt < Formula
   end
 
   def install
-    user_admin = Etc.getgrnam("admin").mem.include?(ENV["USER"])
-
-    args = %W[
-      --disable-dependency-tracking
-      --disable-warnings
-      --prefix=#{prefix}
-      --with-ssl=#{Formula["openssl"].opt_prefix}
-      --with-sasl
-      --with-gss
-      --enable-imap
-      --enable-smtp
-      --enable-pop
-      --enable-hcache
-      --with-tokyocabinet
-    ]
-
-    # This is just a trick to keep 'make install' from trying
-    # to chgrp the mutt_dotlock file (which we can't do if
-    # we're running as an unprivileged user)
-    args << "--with-homespool=.mbox" unless user_admin
-
-    args << "--disable-nls" if build.without? "gettext"
-    args << "--enable-gpgme" if build.with? "gpgme"
+    args = ["--disable-dependency-tracking",
+            "--disable-warnings",
+            "--prefix=#{prefix}",
+            "--with-ssl=#{Formula["openssl"].opt_prefix}",
+            "--with-sasl",
+            "--with-gss",
+            "--enable-imap",
+            "--enable-smtp",
+            "--enable-pop",
+            "--enable-hcache",
+            "--with-tokyocabinet",
+            # This is just a trick to keep 'make install' from trying
+            # to chgrp the mutt_dotlock file (which we can't do if
+            # we're running as an unprivileged user)
+            "--with-homespool=.mbox"]
     args << "--with-slang" if build.with? "s-lang"
+    args << "--enable-gpgme" if build.with? "gpgme"
 
     if build.with? "debug"
       args << "--enable-debug"
@@ -103,15 +93,8 @@ class Mutt < Formula
 
     system "./prepare", *args
     system "make"
-
-    # This permits the `mutt_dotlock` file to be installed under a group
-    # that isn't `mail`.
-    # https://github.com/Homebrew/homebrew/issues/45400
-    if user_admin
-      inreplace "Makefile", /^DOTLOCK_GROUP =.*$/, "DOTLOCK_GROUP = admin"
-    end
-
     system "make", "install"
+
     doc.install resource("html") if build.head?
   end
 

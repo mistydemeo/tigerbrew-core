@@ -1,13 +1,14 @@
 class Clamav < Formula
   desc "Anti-virus software"
   homepage "http://www.clamav.net/"
-  url "http://www.clamav.net/downloads/production/clamav-0.99.tar.gz"
-  sha256 "d2792c8cfadd685fffc40b2199679628815df031fd3149ccf961649fc8787ea9"
+  url "https://downloads.sourceforge.net/clamav/clamav-0.98.7.tar.gz"
+  sha256 "282417b707740de13cd8f18d4cbca9ddd181cf96b444db2cad98913a5153e272"
+  revision 1
 
   bottle do
-    sha256 "713358af050acfb211bfed879f8b49ab310ff51b8ca92a446ff6e9a562c8c1e6" => :el_capitan
-    sha256 "ea7d6586027e16fdf4587a9aadf144d992c9e92951078fcec8d303763bdea796" => :yosemite
-    sha256 "b9829244db5aa864d82d2d1c4f8f26aa23887a26659bc6babd74a8dded4c6061" => :mavericks
+    sha256 "1407c98137cc9e4a3cf839d4a7e48349dc1fe7028e6a1f3a2bd8cee400013406" => :yosemite
+    sha256 "c100729030ac052a54d2724dd8b7ebc13f5897168be2cda7a1ee03e1abb4f48c" => :mavericks
+    sha256 "67dd99e5bf71766f35208aa20dcbb3bb6767d578b755d3ca95f1e7d5d5f7ddee" => :mountain_lion
   end
 
   head do
@@ -18,34 +19,28 @@ class Clamav < Formula
     depends_on "libtool" => :build
   end
 
-  depends_on "pkg-config" => :build
   depends_on "openssl"
-  depends_on "yara" => :optional
   depends_on "json-c" => :optional
-  depends_on "pcre" => :optional
 
   skip_clean "share/clamav"
 
   def install
-    args = %W[
-      --disable-dependency-tracking
-      --disable-silent-rules
-      --prefix=#{prefix}
-      --libdir=#{lib}
-      --sysconfdir=#{etc}/clamav
-      --disable-zlib-vcheck
-      --with-zlib=#{MacOS.sdk_path}/usr
-      --with-openssl=#{Formula["openssl"].opt_prefix}
-      --enable-llvm=no
+    args = [
+      "--disable-dependency-tracking",
+      "--disable-silent-rules",
+      "--prefix=#{prefix}",
+      "--libdir=#{lib}",
+      "--sysconfdir=#{etc}/clamav",
+      "--disable-zlib-vcheck",
+      "--with-zlib=#{MacOS.sdk_path}/usr",
+      "--with-openssl=#{Formula["openssl"].opt_prefix}",
+      "--enable-llvm=no"
     ]
 
     args << "--with-libjson=#{Formula["json-c"].opt_prefix}" if build.with? "json-c"
-    args << "--with-pcre=#{Formula["pcre"].opt_prefix}" if build.with? "pcre"
-    args << "--disable-yara" if build.without? "yara"
-    args << "--without-pcre" if build.without? "pcre"
 
-    pkgshare.mkpath
-    system "autoreconf", "-fvi" if build.head?
+    (share/"clamav").mkpath
+    system "autoreconf", "-i" if build.head?
     system "./configure", *args
     system "make", "install"
   end

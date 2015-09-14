@@ -1,20 +1,17 @@
 class Xqilla < Formula
   desc "XQuery and XPath 2 command-line interpreter"
   homepage "http://xqilla.sourceforge.net/"
-  url "https://downloads.sourceforge.net/project/xqilla/XQilla-2.3.2.tar.gz"
-  sha256 "5ae0aed4091521d5c2f541093e02a81ebe55a9087ba735f80b110068584e217c"
+  url "https://downloads.sourceforge.net/project/xqilla/XQilla-2.3.1.tar.gz"
+  sha256 "5ba1c1060c7d7e1dae537d4e1388d23b278a2177c7652e33121d481907d25d68"
 
   bottle do
     cellar :any
-    revision 1
-    sha256 "467093e2e7aa5d27ef6fbb4b38b4272847b58f0034a274dee32a47d03269a4fc" => :el_capitan
-    sha256 "25adad84e1e9c8aef23c2acde2a7848a1899d291628ffbe6c03c6296fbeb39f4" => :yosemite
-    sha256 "29918d50fd8318817ddea7f7e99ee9f6e144c631fcbeaa19c5b0f478223b1d39" => :mavericks
+    sha256 "f3f90fae2c2ca2b4dffb8d8261ee60c2d9c2efcf9c9dee534f252fafb647616b" => :yosemite
+    sha256 "f9aaade5ef6770609d770579279c55ea5c02d0877a747d75e514b287161af100" => :mavericks
+    sha256 "35b3e6c6d56af36f717f067a759daf2f9aaa135cd519245e925a83e480e1781a" => :mountain_lion
   end
 
   depends_on "xerces-c"
-
-  conflicts_with "zorba", :because => "Both supply xqc.h"
 
   def install
     system "./configure", "--disable-debug", "--disable-dependency-tracking",

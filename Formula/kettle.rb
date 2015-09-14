@@ -1,10 +1,8 @@
 class Kettle < Formula
   desc "Pentaho Data Integration software"
   homepage "http://community.pentaho.com/projects/data-integration/"
-  url "https://downloads.sourceforge.net/project/pentaho/Data%20Integration/6.0/pdi-ce-6.0.1.0-386.zip"
-  sha256 "98a1877977cfba5c2ea40baf23921d418068d3ff19d5f949b85b0b036a45cb85"
-
-  bottle :unneeded
+  url "https://downloads.sourceforge.net/project/pentaho/Data%20Integration/5.0.1-stable/pdi-ce-5.0.1-stable.zip"
+  sha256 "f669f1aaaf0ef0e453ea64df91e016dac8a8b20e3ba90ede758d2f80dc262855"
 
   def install
     rm_rf Dir["*.{bat}"]
@@ -32,7 +30,7 @@ class Kettle < Formula
         <string>#{plist_name}</string>
         <key>ProgramArguments</key>
         <array>
-          <string>#{opt_bin}/pdicarte</string>
+          <string>#{bin}/pdicarte</string>
           <string>#{etc}/kettle/carte-config.xml</string>
         </array>
         <key>EnvironmentVariables</key>
@@ -54,8 +52,7 @@ class Kettle < Formula
   end
 
   test do
-    ENV.java_cache
-
+    system "#{bin}/pdikitchen", "-file=#{libexec}/samples/jobs/Slowly\ Changing\ Dimension/create\ -\ populate\ -\ update\ slowly\ changing\ dimension.kjb", "-level=RowLevel"
     system "#{bin}/pdipan", "-file=#{libexec}/samples/transformations/Encrypt\ Password.ktr", "-level=RowLevel"
   end
 end

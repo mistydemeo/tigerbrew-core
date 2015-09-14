@@ -1,14 +1,15 @@
 class Libebur128 < Formula
   desc "Library implementing the EBU R128 loudness standard"
   homepage "https://github.com/jiixyj/libebur128"
-  url "https://github.com/jiixyj/libebur128/archive/v1.1.0.tar.gz"
-  sha256 "c60e78f4bfda387a0895c64a4fc9850445e3a4425cc98f9140885966ce17c1d1"
+  url "https://github.com/jiixyj/libebur128/archive/v1.0.2.tar.gz"
+  sha256 "9b334d31a26b47ba6740bb7bbee7a24461d535f426b1ed42368c187e27c08323"
 
   bottle do
     cellar :any
-    sha256 "d9c7285c092cf1b75420963efd4f8540fab99ead1e49c7656cab4491c782ec70" => :el_capitan
-    sha256 "09e07df1dd7a1ec59cf2e7eada5208a144d2e8d561dc0da6ce0baefe64006312" => :yosemite
-    sha256 "4070ef3a044c9c9df6adf95bccc9a33faeac8a4d7b29b326135139b404df2b95" => :mavericks
+    revision 2
+    sha1 "69b35529f8165ed8cac324b10d52ce3671e7ab66" => :yosemite
+    sha1 "5d44054e39a6f9c9ad27754ea94bd785e913847e" => :mavericks
+    sha1 "f064843d5ebf08a42d5e02809e398907a242e37d" => :mountain_lion
   end
 
   depends_on "cmake" => :build

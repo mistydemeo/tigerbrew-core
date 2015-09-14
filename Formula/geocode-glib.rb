@@ -1,13 +1,13 @@
 class GeocodeGlib < Formula
   desc "GNOME library for gecoding and reverse geocoding"
   homepage "https://developer.gnome.org/geocode-glib"
-  url "https://download.gnome.org/sources/geocode-glib/3.18/geocode-glib-3.18.2.tar.xz"
-  sha256 "95b11ef2697ac5dbb2f397e7117e08e157b2168624c71507656928095012494e"
+  url "https://download.gnome.org/sources/geocode-glib/3.16/geocode-glib-3.16.2.tar.xz"
+  sha256 "a551ffdbd793d54a14e709c9d02e82dde3abc14eed8065abad92275a43fe2c97"
 
   bottle do
-    sha256 "dad6f3fbbb15e9964b4d754ce82de4466c3f3079f8d1686b96230c01fb2e914b" => :el_capitan
-    sha256 "5f793b1eb08cdfa39596edf4adf9ee9fccc0ff7827ba9461dda0a0c53dcf89e2" => :yosemite
-    sha256 "5c4ac97212c4ba832658efd625e182d1574569280b02975772a7b07413dd169a" => :mavericks
+    sha256 "3830373806212fb96930c17c016c7e358b6109a3a4239bac3eb04c2b3c4742ca" => :yosemite
+    sha256 "157a923195ede1aa0548660e6a98b9d2123f99764d2aa591d51099eeeb2b23cb" => :mavericks
+    sha256 "7955d0be49e8ad30b5abe9c3eab9e731392df51ce2fee30a5962e2963f725f4e" => :mountain_lion
   end
 
   depends_on "pkg-config" => :build
@@ -15,6 +15,9 @@ class GeocodeGlib < Formula
   depends_on "json-glib"
   depends_on "libsoup"
   depends_on "gobject-introspection"
+
+  # patch submitted upstream: https://bugzilla.gnome.org/show_bug.cgi?id=754670
+  patch :DATA
 
   def install
     # forces use of gtk3-update-icon-cache instead of gtk-update-icon-cache. No bugreport should
@@ -66,3 +69,17 @@ class GeocodeGlib < Formula
     system "./test"
   end
 end
+
+__END__
+diff --git a/geocode-glib/geocode-glib.symbols b/geocode-glib/geocode-glib.symbols
+index e8550e5..826c9ef 100644
+--- a/geocode-glib/geocode-glib.symbols
++++ b/geocode-glib/geocode-glib.symbols
+@@ -34,7 +34,6 @@ geocode_reverse_resolve
+ geocode_error_quark
+ geocode_error_get_type
+ _geocode_parse_search_json
+-_geocode_parse_resolve_json
+ _geocode_read_nominatim_attributes
+ _geocode_create_place_from_attributes
+ geocode_place_get_type

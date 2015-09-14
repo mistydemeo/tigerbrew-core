@@ -1,28 +1,34 @@
 class Gwyddion < Formula
   desc "Scanning Probe Microscopy visualization and analysis tool"
   homepage "http://gwyddion.net/"
-  url "http://gwyddion.net/download/2.44/gwyddion-2.44.tar.gz"
-  sha256 "8e4ea25b1e3cd22ef64ee282d81da62a6a1a40e193edbe5d38c39f76b777424f"
+  url "http://gwyddion.net/download/2.41/gwyddion-2.41.tar.gz"
+  sha256 "093e5e20e85cbfc14786a8dcc319943ad30419bffd5ab883e7d0400161fb3cd4"
 
   bottle do
-    sha256 "5a9aeb6f403d608775e0d6d3dabf9708b533d2cbb20a4b602a3e132e659a132a" => :el_capitan
-    sha256 "7ec16a6aee0511a9e83e204b43c468cc25c62e03d9078408e46b51a2abca11c7" => :yosemite
-    sha256 "8b4cdf207b30a3654e9aa29011a1c56f849ac35fc487b1303d2d6474477e85d7" => :mavericks
+    sha256 "557467222d7732e7ab0909336e60cf40e865db1802b424716c749c0acd1f3338" => :yosemite
+    sha256 "51840b592615b74443d82450486a26834b2b154ff9a34d6e0452c67a3d6b7658" => :mavericks
+    sha256 "70333e143e8e5e6845fcc891cecd2123c2aa9b84e74572daf52637fde5857914" => :mountain_lion
   end
 
   depends_on "pkg-config" => :build
-  depends_on "fftw"
   depends_on "gtk+"
   depends_on "gtk-mac-integration"
-  depends_on "gtkglext"
   depends_on "libxml2"
-  depends_on "minizip"
-
+  depends_on "fftw"
+  depends_on "gtkglext"
   depends_on :python => :optional
   depends_on "pygtk" if build.with? "python"
   depends_on "gtksourceview" if build.with? "python"
 
   def install
+    # Add Python library path and prevent explicit linkage for the gwy module.
+    # Upstream patch: <http://sourceforge.net/p/gwyddion/mailman/message/34347458/>
+    inreplace "configure", 'PYTHON_LIBS=-l$libpython',
+                           %(py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
+                           PYTHON_LIBS="-L${py_prefix}/lib -l$libpython")
+    inreplace "modules/pygwy/Makefile.in", '$(PYTHON_LIBS) $(PYGTK_LIBS) @GTK_LIBS@',
+                                           '-undefined dynamic_lookup $(PYGTK_LIBS) @GTK_LIBS@'
+
     system "./configure", "--disable-dependency-tracking",
                           "--disable-desktop-file-update",
                           "--prefix=#{prefix}",

@@ -14,9 +14,9 @@ class Automake < Formula
     sha256 "6e6fdaa7fb7ddaaeb103341d1ca351e0669874f86eb21eb6623cb345dd1f5b6f" => :mountain_lion
   end
 
-  keg_only :provided_until_xcode43
-
   depends_on "autoconf" => :run
+
+  keg_only :provided_until_xcode43
 
   def install
     ENV["PERL"] = "/usr/bin/perl"
@@ -33,25 +33,6 @@ class Automake < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
-      int main() { return 0; }
-    EOS
-    (testpath/"configure.ac").write <<-EOS.undent
-      AC_INIT(test, 1.0)
-      AM_INIT_AUTOMAKE
-      AC_PROG_CC
-      AC_CONFIG_FILES(Makefile)
-      AC_OUTPUT
-    EOS
-    (testpath/"Makefile.am").write <<-EOS.undent
-      bin_PROGRAMS = test
-      test_SOURCES = test.c
-    EOS
-    system bin/"aclocal"
-    system bin/"automake", "--add-missing", "--foreign"
-    system "autoconf"
-    system "./configure"
-    system "make"
-    system "./test"
+    system "#{bin}/automake", "--version"
   end
 end

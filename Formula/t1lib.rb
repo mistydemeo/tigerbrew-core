@@ -1,15 +1,14 @@
 class T1lib < Formula
   desc "C library to generate/rasterize bitmaps from Type 1 fonts"
   homepage "http://www.t1lib.org/"
-  url "https://www.ibiblio.org/pub/linux/libs/graphics/t1lib-5.1.2.tar.gz"
-  mirror "ftp://ftp.ibiblio.org/pub/linux/libs/graphics/t1lib-5.1.2.tar.gz"
+  url "http://www.ibiblio.org/pub/Linux/libs/graphics/t1lib-5.1.2.tar.gz"
   sha256 "821328b5054f7890a0d0cd2f52825270705df3641dbd476d58d17e56ed957b59"
 
   bottle do
-    revision 2
-    sha256 "fa356a5405f5b0cf57c15ebd5b680c215e1e498189914e9b9663eb132655a8c1" => :el_capitan
-    sha256 "6d1bf242eb7a5201180b9d4b505a7f83663802383d358180cea696714ae57fc8" => :yosemite
-    sha256 "ec107b30d4b9a95bbc094a7a944cab862ed78a875c5ed0002aa7232ec514e9d7" => :mavericks
+    revision 1
+    sha1 "d0e610a54eeaa0f6a5dfdbfe8a60b7d4a7bbd2c4" => :yosemite
+    sha1 "480846a0795f75a04b0e86621afcc7e19352ca16" => :mavericks
+    sha1 "e7ae71cb8f1080e9c8b5bc95468ff4dd0bc4c7d6" => :mountain_lion
   end
 
   def install

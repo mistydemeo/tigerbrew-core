@@ -1,15 +1,14 @@
 class Sord < Formula
   desc "C library for storing RDF data in memory"
-  homepage "https://drobilla.net/software/sord/"
-  url "https://download.drobilla.net/sord-0.14.0.tar.bz2"
-  sha256 "7656d8ec56a43e0f0a168fe78670a7628a42d3a597b53c7a72ac243a74e0f19a"
+  homepage "http://drobilla.net/software/sord/"
+  url "http://download.drobilla.net/sord-0.12.2.tar.bz2"
+  sha256 "bd0538d37de5e782023a7261d8ee9d83a792a12eeea7d94dec7a93dd9cda0767"
 
   bottle do
     cellar :any
-    revision 1
-    sha256 "1f03c341d2ff39082e12ca7ef48b7c599cbfa57c1064f3117997dc3641bf29eb" => :el_capitan
-    sha256 "dfa53d9dae13b29a164710351e772e3518e3821c1b83b52bcd5c1e76e7471786" => :yosemite
-    sha256 "cb2ca5b304181e590334ad9cfec8b2dbce606b385a39297f7dd31aebbb9d7c39" => :mavericks
+    sha256 "0449c8ef3e82a4678978971c13b1f85558ae76290dae8806597f3bb4d0419cca" => :yosemite
+    sha256 "e44dcadb2abaae16e108c5b409b531610cf6778ab114e1008d0eba24a76f6dd9" => :mavericks
+    sha256 "c9fc9daeadbe4096518ace14a9635118f037360156b229b4e96df04836d8a102" => :mountain_lion
   end
 
   depends_on "pkg-config" => :build

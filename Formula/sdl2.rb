@@ -1,19 +1,19 @@
 class Sdl2 < Formula
   desc "Low-level access to audio, keyboard, mouse, joystick, and graphics"
   homepage "https://www.libsdl.org/"
-  url "https://libsdl.org/release/SDL2-2.0.4.tar.gz"
-  sha256 "da55e540bf6331824153805d58b590a29c39d2d506c6d02fa409aedeab21174b"
+  url "https://libsdl.org/release/SDL2-2.0.3.tar.gz"
+  sha256 "a5a69a6abf80bcce713fa873607735fe712f44276a7f048d60a61bb2f6b3c90c"
 
   bottle do
     cellar :any
     revision 1
-    sha256 "748d150139dcb1d58deb2f7b7e2fa73f0c3a6cc59a48ef4bff37e97307b3e6b6" => :el_capitan
-    sha256 "2bf3ca9593760c9fae6046ef7e650b6609c9b0c992ec817b593edd3ceb13f226" => :yosemite
-    sha256 "98556d9ac1f5cf7c51deec86bc23eb773dde6454939e181ec769dcafb51b4282" => :mavericks
+    sha1 "8254a12777c10ec1d4f1d896a07d03d62fdc5c99" => :yosemite
+    sha1 "0e9a2ac818e67dfb759ce8d43f4abd3a0dcaed8b" => :mavericks
+    sha1 "3211cd71e5c956e38ed934c65be376a42aaf63c9" => :mountain_lion
   end
 
   head do
-    url "https://hg.libsdl.org/SDL", :using => :hg
+    url "http://hg.libsdl.org/SDL", :using => :hg
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
@@ -21,14 +21,6 @@ class Sdl2 < Formula
   end
 
   option :universal
-
-  # https://github.com/mistydemeo/tigerbrew/issues/361
-  if MacOS.version <= :snow_leopard
-    patch do
-      url "https://gist.githubusercontent.com/miniupnp/26d6e967570e5729a757/raw/1a86f3cdfadbd9b74172716abd26114d9cb115d5/SDL2-2.0.3_OSX_104.patch"
-      sha256 "4d01f05f02568e565978308e42e98b4da2b62b1451f71c29d24e11202498837e"
-    end
-  end
 
   def install
     # we have to do this because most build scripts assume that all sdl modules
@@ -38,13 +30,12 @@ class Sdl2 < Formula
 
     ENV.universal_binary if build.universal?
 
-    system "./autogen.sh" if build.head? || build.devel?
+    system "./autogen.sh" if build.head?
 
     args = %W[--prefix=#{prefix}]
     # LLVM-based compilers choke on the assembly code packaged with SDL.
     args << "--disable-assembly" if ENV.compiler == :llvm || (ENV.compiler == :clang && MacOS.clang_build_version < 421)
     args << "--without-x"
-    args << "--disable-haptic" << "--disable-joystick" if MacOS.version <= :snow_leopard
 
     system "./configure", *args
     system "make", "install"

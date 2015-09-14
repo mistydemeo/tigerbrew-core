@@ -7,14 +7,13 @@ class Libaacs < Formula
 
   bottle do
     cellar :any
-    revision 1
-    sha256 "9c7aed37c3991fd326c976c498423a1df4801f3ef65c8bc7a8b68a8a87f1bc31" => :el_capitan
-    sha256 "5b7526780e9ad562555a03d2d3d66c6aabdc9b0502aad0537b5588ab568fca6f" => :yosemite
-    sha256 "d440c657e0cfd21cc6e8b86bed857a731f8cd80fa574a5366a5c70fb6192bbd7" => :mavericks
+    sha256 "7400d1add43105cc37e0f0901b8ec697e9173289f5551929a63939c16147e11e" => :yosemite
+    sha256 "023017918e674900f04616fbd4a312627b632236f7aa290e9b05ba0b03c90288" => :mavericks
+    sha256 "294596adf06da1cf609775be4cd03b4abc150208dddb62f6bfb893169dc8ed15" => :mountain_lion
   end
 
   head do
-    url "https://git.videolan.org/git/libaacs.git"
+    url "git://git.videolan.org/libaacs.git"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build

@@ -8,7 +8,7 @@ class Detox < Formula
     system "./configure", "--mandir=#{man}", "--prefix=#{prefix}"
     system "make"
     (prefix/"etc").mkpath
-    pkgshare.mkpath
+    (share/"detox").mkpath
     system "make", "install"
   end
 end

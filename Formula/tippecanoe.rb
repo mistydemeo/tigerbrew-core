@@ -1,14 +1,14 @@
 class Tippecanoe < Formula
   desc "Build vector tilesets from collections of GeoJSON features"
   homepage "https://github.com/mapbox/tippecanoe"
-  url "https://github.com/mapbox/tippecanoe/archive/1.9.2.tar.gz"
-  sha256 "9208a5a5fe843c34a08c6ae413c4e259defca4c037dd2c72781b3d7a7c819297"
+  url "https://github.com/mapbox/tippecanoe/archive/v1.2.0.tar.gz"
+  sha256 "237510a1a92a8626407c29c8d8047e73bbb22c1a8af8f9d1b8931d994c8fac2d"
 
   bottle do
     cellar :any
-    sha256 "b6879e8136c7d181e6de51da729265986ed4753251613ac2392a02e9ccf6a794" => :el_capitan
-    sha256 "4df3d35d6f9a4587b9f5121d0384abebfc9efe623442842823e54ad917c7d0b0" => :yosemite
-    sha256 "c1494e8eaba171cb176b50f24e8702b607bc90b25f90fcbbc6bd37ac785c9eb4" => :mavericks
+    sha256 "249c74b9b656aa43b687afd62d202dce1ad308ace3d3d02b60f115d55d17f18f" => :yosemite
+    sha256 "6a0663d76c8c3b320dfc0a09dd2ba8d282cab0dbcf227ac86b4ec1af410f13bf" => :mavericks
+    sha256 "71c71a42d35fa01a9516bd5731378dbf97087da190207e5a1e8c2222b91a50da" => :mountain_lion
   end
 
   depends_on "protobuf-c"
@@ -19,10 +19,12 @@ class Tippecanoe < Formula
   end
 
   test do
-    (testpath/"test.json").write <<-EOS.undent
+    path = testpath/"test.json"
+    path.write <<-EOS.undent
       {"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[0,0]}}
     EOS
-    safe_system "#{bin}/tippecanoe", "-o", "test.mbtiles", "test.json"
-    assert File.exist?("#{testpath}/test.mbtiles"), "tippecanoe generated no output!"
+    output = `#{bin}/tippecanoe -o test.mbtiles #{path}`.strip
+    assert_equal 0, $?.exitstatus
+    assert_equal "using layer 0 name test", output
   end
 end

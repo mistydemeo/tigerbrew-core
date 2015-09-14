@@ -9,7 +9,7 @@ class PgTop < Formula
   def install
     system "./configure", "--disable-debug", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
-    (buildpath/"config.h").append_lines "#define HAVE_DECL_STRLCPY 1" if MacOS.version >= :mavericks
+    system "echo '#define HAVE_DECL_STRLCPY 1' >> config.h" if MacOS.version >= :mavericks
     system "make", "install"
   end
 end

@@ -1,35 +1,28 @@
 class Abcl < Formula
   desc "Armed Bear Common Lisp: a full implementation of Common Lisp"
   homepage "http://abcl.org"
-  url "http://abcl.org/releases/1.3.3/abcl-src-1.3.3.tar.gz"
-  sha256 "2186e3670bc9778472f5589109a79f13f0e487444e0602b6fcdc96b7c68f7d0f"
-  head "http://abcl.org/svn/trunk/abcl/", :using => :svn
+  url "http://abcl.org/releases/1.3.2/abcl-bin-1.3.2.tar.gz"
+  sha256 "01105fe25c51873b71ffd6f0ba2d9b2688741ed96ff60c1950c0e62f9d84a785"
 
   bottle do
-    cellar :any_skip_relocation
-    revision 1
-    sha256 "07238d63939ab91c3d9f0c66cb0214e22a2a87d928c8118a59eaf3400f9c5e6f" => :el_capitan
-    sha256 "6baf2c9e04b9bdded093234f797dcdab93d980ca941e74c8a9d44f7bc59a8b6d" => :yosemite
-    sha256 "8a4fa7e13d476419b446b7efa99d3d2e380cf468ec9e9f5c311ef6e1d71847d0" => :mavericks
+    cellar :any
+    sha256 "deede4e4929c5b566d4cd9a32a305bc42ba614fb49f7e267c471e752b3a373c5" => :yosemite
+    sha256 "0cd7402db8c335a5a8e93ee5d78d31f365bf786baaf98a7382b1c902a53472cd" => :mavericks
+    sha256 "32ee139646ce32e020ca9d1d8026119d5cc4f4957976a0aacd6edbd3fae6e3e0" => :mountain_lion
   end
 
-  depends_on "ant"
   depends_on :java => "1.5+"
-  depends_on "rlwrap" => :recommended
+  depends_on "rlwrap"
 
   def install
-    ENV.java_cache
-    system "ant"
-
-    libexec.install "dist/abcl.jar", "dist/abcl-contrib.jar"
-    (bin/"abcl").write <<-EOS.undent
+    libexec.install "abcl.jar", "abcl-contrib.jar"
+    (bin+"abcl").write <<-EOS.undent
       #!/bin/sh
-      #{"rlwrap " if build.with?("rlwrap")}java -cp #{libexec}/abcl.jar:"$CLASSPATH" org.armedbear.lisp.Main "$@"
+      rlwrap java -jar "#{libexec}/abcl.jar" "$@"
     EOS
   end
 
   test do
-    (testpath/"test.lisp").write "(print \"Homebrew\")\n(quit)"
-    assert_match /"Homebrew"$/, shell_output("#{bin}/abcl --load test.lisp").strip
+    assert_match "42", pipe_output("#{bin}/abcl", "(+ 1 1 40)")
   end
 end

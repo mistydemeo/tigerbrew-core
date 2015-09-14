@@ -1,13 +1,14 @@
 class Gnuplot < Formula
   desc "Command-driven, interactive function plotting"
   homepage "http://www.gnuplot.info"
-  url "https://downloads.sourceforge.net/project/gnuplot/gnuplot/5.0.3/gnuplot-5.0.3.tar.gz"
-  sha256 "5f6ee35f3f22014058e999911934bfa9db28e02a2722a7001c192cd182b8c715"
+  url "https://downloads.sourceforge.net/project/gnuplot/gnuplot/5.0.1/gnuplot-5.0.1.tar.gz"
+  sha256 "7cbc557e71df581ea520123fb439dea5f073adcc9010a2885dc80d4ed28b3c47"
 
   bottle do
-    sha256 "e429bd5f40c8611b5e2e7c286124fc9da2547bfb5d80aed32f5e1d4dbd3481ec" => :el_capitan
-    sha256 "26baf173eb97e86686dbaa1770b59b91c3b7d91049cd4e213b87c2ba7ea8b820" => :yosemite
-    sha256 "bb3700adc73329b2f4e0a5d423a607a00a52ac3ddab6070121a7fb336a8b16bc" => :mavericks
+    revision 1
+    sha256 "083a5efbc783c1375d549c89a15c6ec77f6a319be8ec08b5217b368356ae8270" => :yosemite
+    sha256 "fa1003970c98d29f3c85cf646753603cfe89c428dba78b26733ae39a3bea4b99" => :mavericks
+    sha256 "e8b857d4951c4ceaae42d792be9685dfe4a33387e49a7e42987efb85d51d892a" => :mountain_lion
   end
 
   head do
@@ -20,10 +21,10 @@ class Gnuplot < Formula
 
   option "with-cairo",  "Build the Cairo based terminals"
   option "without-lua",  "Build without the lua/TikZ terminal"
-  option "with-test",  "Verify the build with make check"
+  option "with-tests",  "Verify the build with make check"
   option "without-emacs", "Do not build Emacs lisp files"
   option "with-wxmac", "Build wxmac support. Need with-cairo to build wxt terminal"
-  option "with-tex",  "Build with LaTeX support"
+  option "with-latex",  "Build with LaTeX support"
   option "with-aquaterm", "Build with AquaTerm support"
 
   deprecated_option "with-x" => "with-x11"
@@ -33,10 +34,8 @@ class Gnuplot < Formula
   deprecated_option "nogd" => "without-gd"
   deprecated_option "cairo" => "with-cairo"
   deprecated_option "nolua" => "without-lua"
-  deprecated_option "tests" => "with-test"
-  deprecated_option "with-tests" => "with-test"
-  deprecated_option "latex" => "with-tex"
-  deprecated_option "with-latex" => "with-tex"
+  deprecated_option "tests" => "with-tests"
+  deprecated_option "latex" => "with-latex"
 
   depends_on "pkg-config" => :build
   depends_on "fontconfig"
@@ -46,11 +45,11 @@ class Gnuplot < Formula
   depends_on "libpng"
   depends_on "libtiff"
   depends_on "readline"
-  depends_on "pango" if build.with?("cairo") || build.with?("wxmac")
+  depends_on "pango" if (build.with? "cairo") || (build.with? "wxmac")
   depends_on "pdflib-lite" => :optional
   depends_on "qt" => :optional
   depends_on "wxmac" => :optional
-  depends_on :tex => :optional
+  depends_on :tex if build.with? "latex"
   depends_on :x11 => :optional
 
   def install
@@ -92,7 +91,7 @@ class Gnuplot < Formula
     args << ((build.with? "aquaterm") ? "--with-aquaterm" : "--without-aquaterm")
     args << ((build.with? "x11") ? "--with-x" : "--without-x")
 
-    if build.with? "tex"
+    if build.with? "latex"
       args << "--with-latex"
       args << "--with-tutorial"
     else
@@ -104,7 +103,7 @@ class Gnuplot < Formula
     system "./configure", *args
     ENV.j1 # or else emacs tries to edit the same file with two threads
     system "make"
-    system "make", "check" if build.with?("test") || build.bottle?
+    system "make", "check" if build.with?("tests") || build.bottle?
     system "make", "install"
   end
 

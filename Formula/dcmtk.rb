@@ -3,19 +3,20 @@ class Dcmtk < Formula
   homepage "http://dicom.offis.de/dcmtk.php.en"
 
   # Current snapshot used for stable now.
-  url "http://dicom.offis.de/download/dcmtk/snapshot/dcmtk-3.6.1_20160216.tar.gz"
-  version "3.6.1-20160216"
-  sha256 "51c1075a5c0b631ac0849a967862eaa55466df0aa8c4704f9d67b541bedba812"
+  url "http://dicom.offis.de/download/dcmtk/snapshot/dcmtk-3.6.1_20150629.tar.gz"
+  sha256 "6af8a4683a8f4995cefbad00e727fd760e0e5f535d7c4ad622ce280a701888e2"
+  version "3.6.1-20150629"
 
   head "git://git.dcmtk.org/dcmtk.git"
 
   bottle do
-    sha256 "177f217df6e3eccb68e5306222b136ed87609f89f041f4451459e4a78f5eaf33" => :el_capitan
-    sha256 "15ce712721b1a1d52095dda6ccaee211920357834f26e39241673e6513a1fa9a" => :yosemite
-    sha256 "8d788453c0221597d65effe0b814aedb371d1b28170bc38be904823d28d5c0d7" => :mavericks
+    sha256 "4dbb44f19f96db2a6d6324dbcb7eb1127581d156000659c45892d4500937c9bf" => :yosemite
+    sha256 "943ec5d29513a70317af4b8d5da846578d610af635c6631329f55ed4a6935cb3" => :mavericks
+    sha256 "df00c07351533cedd1b17cb255e58ce80f123db1d77828684ef2991785d2318d" => :mountain_lion
   end
 
   option "with-docs", "Install development libraries/headers and HTML docs"
+  option "with-openssl", "Configure DCMTK with support for OpenSSL"
   option "with-libiconv", "Build with brewed libiconv. Dcmtk and system libiconv can have problems with utf8."
 
   depends_on "cmake" => :build
@@ -29,8 +30,8 @@ class Dcmtk < Formula
     ENV.m64 if MacOS.prefer_64_bit?
 
     args = std_cmake_args
-    args << "-DDCMTK_WITH_OPENSSL=YES"
     args << "-DDCMTK_WITH_DOXYGEN=YES" if build.with? "docs"
+    args << "-DDCMTK_WITH_OPENSSL=YES" if build.with? "openssl"
     args << "-DDCMTK_WITH_ICONV=YES -DLIBICONV_DIR=#{Formula["libiconv"].opt_prefix}" if build.with? "libiconv"
     args << ".."
 

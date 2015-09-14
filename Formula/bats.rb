@@ -19,6 +19,7 @@ class Bats < Formula
     EOS
 
     chmod 0755, testpath/"testing.sh"
-    assert_match "addition", shell_output("./testing.sh")
+    output = shell_output("./testing.sh")
+    assert output.include?("addition")
   end
 end

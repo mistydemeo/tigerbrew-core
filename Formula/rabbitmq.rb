@@ -1,12 +1,9 @@
 class Rabbitmq < Formula
   desc "Messaging broker"
   homepage "https://www.rabbitmq.com"
-  url "https://www.rabbitmq.com/releases/rabbitmq-server/v3.6.0/rabbitmq-server-generic-unix-3.6.0.tar.xz"
-  sha256 "f8b8e8cac8874d947c364350e215723309caf158b69ea265bac61a0f5e8d101b"
+  url "https://www.rabbitmq.com/releases/rabbitmq-server/v3.5.4/rabbitmq-server-mac-standalone-3.5.4.tar.gz"
+  sha256 "5a3cbf4a27ef7d81f64f511faa89a45c371713c459218ad893407d31d525d711"
 
-  bottle :unneeded
-
-  depends_on "erlang"
   depends_on "simplejson" => :python if MacOS.version <= :leopard
 
   def install
@@ -20,13 +17,12 @@ class Rabbitmq < Formula
     # Correct SYS_PREFIX for things like rabbitmq-plugins
     inreplace sbin/"rabbitmq-defaults" do |s|
       s.gsub! "SYS_PREFIX=${RABBITMQ_HOME}", "SYS_PREFIX=#{HOMEBREW_PREFIX}"
-      erlang = Formula["erlang"]
-      s.gsub! "CLEAN_BOOT_FILE=start_clean", "CLEAN_BOOT_FILE=#{erlang.opt_lib/"erlang/bin/start_clean"}"
-      s.gsub! "SASL_BOOT_FILE=start_sasl", "SASL_BOOT_FILE=#{erlang.opt_lib/"erlang/bin/start_clean"}"
+      s.gsub! 'CLEAN_BOOT_FILE="${SYS_PREFIX}', "CLEAN_BOOT_FILE=\"#{prefix}"
+      s.gsub! 'SASL_BOOT_FILE="${SYS_PREFIX}', "SASL_BOOT_FILE=\"#{prefix}"
     end
 
     # Set RABBITMQ_HOME in rabbitmq-env
-    inreplace (sbin + "rabbitmq-env"), 'RABBITMQ_HOME="$(rmq_realpath "${RABBITMQ_SCRIPTS_DIR}/..")"', "RABBITMQ_HOME=#{prefix}"
+    inreplace (sbin + "rabbitmq-env"), 'RABBITMQ_HOME="${SCRIPT_DIR}/.."', "RABBITMQ_HOME=#{prefix}"
 
     # Create the rabbitmq-env.conf file
     rabbitmq_env_conf = etc+"rabbitmq/rabbitmq-env.conf"
@@ -50,13 +46,6 @@ class Rabbitmq < Formula
   def caveats; <<-EOS.undent
     Management Plugin enabled by default at http://localhost:15672
     EOS
-  end
-
-  test do
-    ENV["RABBITMQ_MNESIA_BASE"] = testpath/"var/lib/rabbitmq/mnesia"
-    system sbin/"rabbitmq-server", "-detached"
-    system sbin/"rabbitmqctl", "status"
-    system sbin/"rabbitmqctl", "stop"
   end
 
   def rabbitmq_env; <<-EOS.undent
@@ -84,7 +73,7 @@ class Rabbitmq < Formula
         <dict>
           <!-- need erl in the path -->
           <key>PATH</key>
-          <string>#{HOMEBREW_PREFIX}/sbin:/usr/bin:/bin:#{HOMEBREW_PREFIX}/bin</string>
+          <string>/usr/local/sbin:/usr/bin:/bin:/usr/local/bin</string>
           <!-- specify the path to the rabbitmq-env.conf file -->
           <key>CONF_ENV_FILE</key>
           <string>#{etc}/rabbitmq/rabbitmq-env.conf</string>

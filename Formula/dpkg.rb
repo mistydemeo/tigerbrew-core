@@ -1,14 +1,14 @@
 class Dpkg < Formula
   desc "Debian package management system"
   homepage "https://wiki.debian.org/Teams/Dpkg"
-  url "https://mirrors.ocf.berkeley.edu/debian/pool/main/d/dpkg/dpkg_1.18.4.tar.xz"
-  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/d/dpkg/dpkg_1.18.4.tar.xz"
-  sha256 "fe89243868888ce715bf45861f26264f767d4e4dbd0d6f1a26ce60bbbbf106da"
+  url "https://mirrors.kernel.org/debian/pool/main/d/dpkg/dpkg_1.18.2.tar.xz"
+  mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/d/dpkg/dpkg_1.18.2.tar.xz"
+  sha256 "11484f2a73d027d696e720a60380db71978bb5c06cd88fe30c291e069ac457a4"
 
   bottle do
-    sha256 "012bcb1fc4095615f2c5694ac16e12ad17448708794b74517b69249b2dff49ea" => :el_capitan
-    sha256 "81e8e27dc155bbfc3b2a5f106f1caddc8960f562dc8dea00920d9bf8235c5cc3" => :yosemite
-    sha256 "6e7977501e3f923d0177796509cb59b67f31dc88d0f0fbae91b97df4becf45f5" => :mavericks
+    sha256 "467a5d686281876289c33a5d7c297c425c39a6cd67155c40bc2c2e72fa1f6c09" => :yosemite
+    sha256 "00fa151281d448c9c3f89bd269fc5d4b29cef5589ff0504c59670244fae11abb" => :mavericks
+    sha256 "b6353be833eea2f48811735c4879d140a0a6bcc64239221c8d217f00fdc9e306" => :mountain_lion
   end
 
   depends_on "pkg-config" => :build

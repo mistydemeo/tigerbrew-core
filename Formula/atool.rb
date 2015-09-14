@@ -1,15 +1,14 @@
 class Atool < Formula
   desc "Archival front-end"
   homepage "https://savannah.nongnu.org/projects/atool/"
-  url "https://savannah.nongnu.org/download/atool/atool-0.39.0.tar.gz"
+  url "http://savannah.nongnu.org/download/atool/atool-0.39.0.tar.gz"
   sha256 "aaf60095884abb872e25f8e919a8a63d0dabaeca46faeba87d12812d6efc703b"
 
   bottle do
-    cellar :any_skip_relocation
-    revision 2
-    sha256 "dcfdcb720aa3704b9103aa01bb8efac42d24327bc8664baa420a9a69d75a98b6" => :el_capitan
-    sha256 "efdeeb165e146f4a76477417d2af9c60e2f776d06081bb579ff73ceb296a899d" => :yosemite
-    sha256 "4eed286344a3a1d4fc6efc908b34062b5cc7c7fdf2449cf85b7767168585fc7a" => :mavericks
+    cellar :any
+    sha1 "5bae1ea5b44d870cf9181ed061fe9ff2bb96351e" => :yosemite
+    sha1 "886601266294c7e337f0f75f3b04c09a60590807" => :mavericks
+    sha1 "22b2f19cfa180dd72929e5fb43d1444a206e660a" => :mountain_lion
   end
 
   def install
@@ -25,7 +24,7 @@ class Atool < Formula
       system bin/"apack", "test.tar.gz", "example.txt", "example2.txt"
     end
     output = shell_output("#{bin}/als #{testpath}/apple_juice/test.tar.gz")
-    assert_match "example.txt", output
-    assert_match "example2.txt", output
+    assert output.include? "example.txt"
+    assert output.include? "example2.txt"
   end
 end

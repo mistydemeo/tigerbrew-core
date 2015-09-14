@@ -1,13 +1,13 @@
 class Poppler < Formula
   desc "PDF rendering library (based on the xpdf-3.0 code base)"
-  homepage "https://poppler.freedesktop.org/"
-  url "https://poppler.freedesktop.org/poppler-0.41.0.tar.xz"
-  sha256 "420abaab63caed9e1ee28964a0ba216d1979506726164bc99ad5ade289192a1b"
+  homepage "http://poppler.freedesktop.org"
+  url "http://poppler.freedesktop.org/poppler-0.35.0.tar.xz"
+  sha256 "e86755b1a4df6efe39d84f581c11bcb0e34976166a671a7b700c28ebaa3e2189"
 
   bottle do
-    sha256 "cc7172f9b672b09f52140463ac3ac574f79dc83015e2d927cf3abe8b225da6a3" => :el_capitan
-    sha256 "3771644309b386fd69a6678167b73849d718624b7a64c5bdf06e5d5abaf9d8ac" => :yosemite
-    sha256 "df5160db16962c5bbf2a64d352b0fe5ff5e07213b44b5e01cc140bbfda297958" => :mavericks
+    sha256 "2ddef226bf71ff00ddf27548eadc1adf8d26c925c72da4d46dc4478570ec4912" => :yosemite
+    sha256 "29dd0e5951b599037ec093b1cf32c6786777c3da8448fa5a39967e3b7da5aa7b" => :mavericks
+    sha256 "ca7a9973bb34ca53097aadd1c43edaf8377a6ec25b80176e71ad7c7b7556566c" => :mountain_lion
   end
 
   option "with-qt", "Build Qt backend"
@@ -36,7 +36,7 @@ class Poppler < Formula
   conflicts_with "pdftohtml", :because => "both install `pdftohtml` binaries"
 
   resource "font-data" do
-    url "https://poppler.freedesktop.org/poppler-data-0.4.7.tar.gz"
+    url "http://poppler.freedesktop.org/poppler-data-0.4.7.tar.gz"
     sha256 "e752b0d88a7aba54574152143e7bf76436a7ef51977c55d6bd9a48dccde3a7de"
   end
 
@@ -52,9 +52,7 @@ class Poppler < Formula
       --enable-introspection=yes
     ]
 
-    if build.with?("qt") && build.with?("qt5")
-      raise "poppler: --with-qt and --with-qt5 cannot be used at the same time"
-    elsif build.with? "qt"
+    if build.with? "qt"
       args << "--enable-poppler-qt4"
     elsif build.with? "qt5"
       args << "--enable-poppler-qt5"

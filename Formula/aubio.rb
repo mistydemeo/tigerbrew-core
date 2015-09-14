@@ -8,7 +8,6 @@ class Aubio < Formula
 
   bottle do
     cellar :any
-    sha256 "ccc98e1d32cd07973ae559abc1db492c3307d6fa08b206dda54391a10b43f007" => :el_capitan
     sha256 "4b9b7780d8523f46b4de9da1da42de9a81af06bbe87b1c36125860b8eb014533" => :yosemite
     sha256 "f23c2aeef3734dadeaa2369da75e20a50269650ab18e9a1a5639df9de8eb43d2" => :mavericks
     sha256 "770f58a1601edce01bcdd4fffcb6bc7a75c81c3119eab6592cd51c911fe0bc24" => :mountain_lion
@@ -44,7 +43,8 @@ class Aubio < Formula
 
     if build.with? "python"
       cd "python" do
-        system "python", *Language::Python.setup_install_args(prefix)
+        system "python", "./setup.py", "build"
+        system "python", "./setup.py", "install", "--prefix", prefix
         bin.env_script_all_files(libexec+"bin", :PYTHONPATH => ENV["PYTHONPATH"])
       end
     end

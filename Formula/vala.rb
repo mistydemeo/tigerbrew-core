@@ -1,18 +1,18 @@
 class Vala < Formula
   desc "Compiler for the GObject type system"
   homepage "https://live.gnome.org/Vala"
-  url "https://download.gnome.org/sources/vala/0.30/vala-0.30.1.tar.xz"
-  sha256 "23add78e5c6a5e6df019d4a885c9c79814c9e0b957519ec8a4f4d826c4e5df2c"
+  url "https://download.gnome.org/sources/vala/0.28/vala-0.28.1.tar.xz"
+  sha256 "1c0eaea6134b75af17221cb699f13d7236d607bb48192565c3d865c38f184f47"
 
   bottle do
-    sha256 "b68681f676381035cdd85e944aa234f0566137bda514ec105477fbeed246a365" => :el_capitan
-    sha256 "752fe91460002b335c35084f073d6e3f3666017f6b7dea9f728a828a0dde911e" => :yosemite
-    sha256 "bf422cf5802d09413482943afac7cd0b7d19e2defa1955330acb11d644d61299" => :mavericks
+    sha256 "edc3bc272827dd848deed5b85a1a6d372eb296b0c988ec792df09a2497b1b0b1" => :yosemite
+    sha256 "afa1ae537d0c90408eb919465c05bc005735a5b62837f445d594c5acb3798cfb" => :mavericks
+    sha256 "b55053adbebaf5d9d016002fb8d2a26b72398649e5a54c5621a68a9e62a31e62" => :mountain_lion
   end
 
   devel do
-    url "https://download.gnome.org/sources/vala/0.31/vala-0.31.1.tar.xz"
-    sha256 "c3cbff1cc29f3fca3939c3994b8591ec3d9aca4d85d042353ee46c00ddf4055f"
+    url "https://download.gnome.org/sources/vala/0.29/vala-0.29.3.tar.xz"
+    sha256 "687f89c404cec528bc6c8e80d80146be0a42aa30f60475fcaefad37bd12949fe"
   end
 
   depends_on "pkg-config" => :run
@@ -42,7 +42,7 @@ class Vala < Formula
       # Save generated C source code.
       "--save-temps",
       # Vala source code path.
-      path.to_s]
+      "#{path}"]
     system "#{bin}/valac", *valac_args
     assert File.exist?(testpath/"hello.c")
 

@@ -3,14 +3,15 @@
 class V8 < Formula
   desc "Google's JavaScript engine"
   homepage "https://code.google.com/p/v8/"
-  url "https://github.com/v8/v8-git-mirror/archive/4.8.271.20.tar.gz"
-  sha256 "1cc1b3c48dfaed61440181ddaf047cc67df9a36afb79f5fc1455fe5ac656977c"
+  url "https://github.com/v8/v8-git-mirror/archive/4.5.103.29.tar.gz"
+  sha256 "5ebcab22d168f59a91319b7e99859f36b8affc3872bf33ad7a1f400750b83040"
 
   bottle do
     cellar :any
-    sha256 "5df273afd3d0273026bef73f0411395f0de8868823a14f0d05f85d0ec852164c" => :el_capitan
-    sha256 "41dc7013808f28d6ffa1f6b9fc3dc06642b384ee0efebb1038d0470ec6919abd" => :yosemite
-    sha256 "2d4be792d0945b762d926f156ae134b3fbed27a45d8e05b364debcdf22e65c92" => :mavericks
+    revision 1
+    sha256 "090670e68b1a9dc542d826b2fe9a1d8b4a7ab9f3f52ecd72f0305e5e6eb28f60" => :yosemite
+    sha256 "4e0c6b2a7bb20374b79a25f374e0f1ab419b2ffbe85e7ad79b493822b59e7041" => :mavericks
+    sha256 "caea11e4fb474d68642a966008fb2e6079ead9988b1d8baba3763ec0349e8318" => :mountain_lion
   end
 
   option "with-readline", "Use readline instead of libedit"
@@ -21,60 +22,44 @@ class V8 < Formula
 
   depends_on :python => :build # gyp doesn't run under 2.6 or lower
   depends_on "readline" => :optional
-  depends_on "icu4c" => :optional
 
   needs :cxx11
 
   # Update from "DEPS" file in tarball.
-  # Note that we don't require the "test" DEPS because we don't run the tests.
   resource "gyp" do
     url "https://chromium.googlesource.com/external/gyp.git",
-        :revision => "2c1e6cced23554ce84806e570acea637f6473afc"
+        :revision => "5122240c5e5c4d8da12c543d82b03d6089eb77c5"
   end
 
   resource "icu" do
     url "https://chromium.googlesource.com/chromium/deps/icu.git",
-        :revision => "42c58d4e49f2250039f0e98d43e0b76e8f5ca024"
+        :revision => "c81a1a3989c3b66fa323e9a6ee7418d7c08297af"
   end
 
   resource "buildtools" do
     url "https://chromium.googlesource.com/chromium/buildtools.git",
-        :revision => "4a95614772d9bcbd8bc197e1d9bd034e088fc740"
-  end
-
-  resource "swarming_client" do
-    url "https://chromium.googlesource.com/external/swarming.client.git",
-        :revision => "8fce79620b04bbe5415ace1103db27505bdc4c06"
-  end
-
-  resource "gtest" do
-    url "https://chromium.googlesource.com/external/github.com/google/googletest.git",
-        :revision => "6f8a66431cb592dad629028a50b3dd418a408c87"
-  end
-
-  resource "gmock" do
-    url "https://chromium.googlesource.com/external/googlemock.git",
-        :revision => "0421b6f358139f02e102c9c332ce19a33faf75be"
+        :revision => "ecc8e253abac3b6186a97573871a084f4c0ca3ae"
   end
 
   resource "clang" do
     url "https://chromium.googlesource.com/chromium/src/tools/clang.git",
-        :revision => "66f5328417331216569e8beb244fd887f62e8997"
+        :revision => "73ec8804ed395b0886d6edf82a9f33583f4a7902"
+  end
+
+  resource "gmock" do
+    url "https://chromium.googlesource.com/external/googlemock.git",
+        :revision => "29763965ab52f24565299976b936d1265cb6a271"
+  end
+
+  resource "gtest" do
+    url "https://chromium.googlesource.com/external/googletest.git",
+        :revision => "23574bf2333f834ff665f894c97bef8a5b33a0a9"
   end
 
   def install
     # Bully GYP into correctly linking with c++11
     ENV.cxx11
     ENV["GYP_DEFINES"] = "clang=1 mac_deployment_target=#{MacOS.version}"
-    # https://code.google.com/p/v8/issues/detail?id=4511#c3
-    ENV.append "GYP_DEFINES", "v8_use_external_startup_data=0"
-
-    if build.with? "icu4c"
-      ENV.append "GYP_DEFINES", "use_system_icu=1"
-      i18nsupport = "i18nsupport=on"
-    else
-      i18nsupport = "i18nsupport=off"
-    end
 
     # fix up libv8.dylib install_name
     # https://github.com/Homebrew/homebrew/issues/36571
@@ -83,16 +68,15 @@ class V8 < Formula
               "'OTHER_LDFLAGS': ['-dynamiclib', '-all_load']",
               "\\0, 'DYLIB_INSTALL_NAME_BASE': '#{opt_lib}'"
 
+    (buildpath/"buildtools").install resource("buildtools")
     (buildpath/"build/gyp").install resource("gyp")
     (buildpath/"third_party/icu").install resource("icu")
-    (buildpath/"buildtools").install resource("buildtools")
-    (buildpath/"tools/swarming_client").install resource("swarming_client")
-    (buildpath/"testing/gtest").install resource("gtest")
     (buildpath/"testing/gmock").install resource("gmock")
+    (buildpath/"testing/gtest").install resource("gtest")
     (buildpath/"tools/clang").install resource("clang")
 
     system "make", "native", "library=shared", "snapshot=on",
-                   "console=readline", i18nsupport,
+                   "console=readline", "i18nsupport=off",
                    "strictaliasing=off"
 
     include.install Dir["include/*"]

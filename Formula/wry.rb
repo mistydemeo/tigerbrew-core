@@ -7,11 +7,10 @@ class Wry < Formula
   head "https://github.com/hoop33/wry.git"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "8274aae5fc7f8ed914f2fd1c99c505f53532709831a41412949d1a133ddcce1f" => :el_capitan
-    sha256 "bb692f4c4690c6a312abec61abf69c279880fbdf620c01f2f61d686a9e04a080" => :mavericks
-    sha256 "e318cba1a286d9d415f45c3f9729a27a8170713b1d06c897567dd5989d4acf14" => :mountain_lion
-    sha256 "62d8ccef8fe23dbc90b9f36d4693922a7884f69ad9276e1dd2e094a67c1fbbf2" => :lion
+    cellar :any
+    sha1 "01ed3904c9e01e700643609efae8fc0d8714bcc2" => :mavericks
+    sha1 "436083b0ec2addb57a9f042a8fcf99cbfce19618" => :mountain_lion
+    sha1 "1f492a3b41120e67046b84ee9d1d1f25e3897a87" => :lion
   end
 
   depends_on :macos => :lion

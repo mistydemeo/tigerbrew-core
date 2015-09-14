@@ -1,13 +1,13 @@
 class Libressl < Formula
   desc "Version of the SSL/TLS protocol forked from OpenSSL"
   homepage "http://www.libressl.org/"
-  url "http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.3.2.tar.gz"
-  sha256 "80f45fae4859f161b1980cad846d4217417d0c89006ad29c0ea8c88da564a96a"
+  url "http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.2.3.tar.gz"
+  sha256 "a1ccc21adf91d60e99246031b99c930c9af5e1b1b5a61b1bec87beef6f16d882"
 
   bottle do
-    sha256 "72a281ad772fb24699fe8eddade53a0a8714f6f87d4a763257605f8780b00b06" => :el_capitan
-    sha256 "3452b5ac20bc4e6d05bed9d0e85aeb9dfd041aa8258c4a958aa6601c371a6a1a" => :yosemite
-    sha256 "983376a294b6ed666656ebb22c12081a0da0e3dc2f40f98dc2931aa679b68cec" => :mavericks
+    sha256 "a4e4afd644d5a603e99ad091a87c10cf132b40b7e8bf3990971223e49a290591" => :yosemite
+    sha256 "fcebe2fdce64cbbd8d6b2e3fe0bd876b5591decfc87f614f754013ed170077a7" => :mavericks
+    sha256 "aa98a4c2a616a67e7352ee1dd9432d03703a2f26804fbba45e8d915d2fa05ed6" => :mountain_lion
   end
 
   head do
@@ -28,6 +28,9 @@ class Libressl < Formula
       --with-openssldir=#{etc}/libressl
       --sysconfdir=#{etc}/libressl
     ]
+
+    # https://github.com/libressl-portable/portable/issues/121
+    args << "--disable-asm" if MacOS.version <= :snow_leopard
 
     system "./autogen.sh" if build.head?
     system "./configure", *args

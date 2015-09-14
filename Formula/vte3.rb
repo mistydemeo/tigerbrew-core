@@ -1,13 +1,13 @@
 class Vte3 < Formula
   desc "Terminal emulator widget used by GNOME terminal"
   homepage "https://developer.gnome.org/vte/"
-  url "https://download.gnome.org/sources/vte/0.42/vte-0.42.4.tar.xz"
-  sha256 "08c88bf5c0aa1dfa3711e2e83b784fb5ea82025661f30b54e93eebd5f4bce113"
+  url "https://download.gnome.org/sources/vte/0.40/vte-0.40.2.tar.xz"
+  sha256 "9b68fbc16b27f2d79e6271f2b0708808594ac5acf979d0fccea118608199fd2d"
 
   bottle do
-    sha256 "db7a446cd050e27b05f0fe762c6368ba2462b47a3bc547c367a442ebe7266b86" => :el_capitan
-    sha256 "9d748d68ba82bb6430e1df735392f4fda09296a67b442856c90ca0f09f535722" => :yosemite
-    sha256 "57433cc429c4321b6f35a7e65045eff63707e4cdc6810d9f4d2bdd7acf559114" => :mavericks
+    sha256 "a80a1136edc91d2572a5164cffefb5069ae3dea9fc646a588d8c6f241efb95a2" => :yosemite
+    sha256 "daa91c3923a7a69e0b0f64bb82bb937f8086bbfec743edd1915f3744409b2cc7" => :mavericks
+    sha256 "4a34b82123ad9bf086c8f9625bd583236ba8a373ca692db4e5a2f285576ddcb6" => :mountain_lion
   end
 
   depends_on "pkg-config" => :build
@@ -16,7 +16,6 @@ class Vte3 < Formula
   depends_on "gtk+3"
   depends_on "gnutls"
   depends_on "vala"
-  depends_on "gobject-introspection"
 
   def install
     args = [
@@ -24,7 +23,7 @@ class Vte3 < Formula
       "--prefix=#{prefix}",
       "--disable-Bsymbolic",
       "--enable-introspection=yes",
-      "--enable-gnome-pty-helper",
+      "--enable-gnome-pty-helper"
     ]
 
     system "./configure", *args

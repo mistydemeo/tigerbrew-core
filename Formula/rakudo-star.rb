@@ -1,14 +1,13 @@
 class RakudoStar < Formula
   desc "Perl 6 compiler"
   homepage "http://rakudo.org/"
-  url "http://rakudo.org/downloads/star/rakudo-star-2016.01.tar.gz"
-  sha256 "feb385c5d05166061f413882e442d3a0ec53884918768940d3f00bb63bc85497"
+  url "http://rakudo.org/downloads/star/rakudo-star-2015.07.tar.gz"
+  sha256 "84d7812a735eedc39d7c0898d4fd15ecd82563971744b2bc6ff0a1c581c82910"
 
   bottle do
-    revision 1
-    sha256 "9c8be44025eb35613659c3dbde873a7090fad7dbec2c22eb10f7c9ecc6579d72" => :el_capitan
-    sha256 "f76450ba4d31834c2ad6fd91082b7ff5d2674380d2f22ea6bad2ce98abd300b3" => :yosemite
-    sha256 "41eab69efeaf9c2f2154b48b52d9a54f4f2353ae0ded7608a0aa123df5b8db28" => :mavericks
+    sha256 "82e75716f260d56213902d41ea0c3f4f31c9c38202cc605887eba97c1fd9c762" => :yosemite
+    sha256 "5ef37f2b8a655614ae64c488ec29bc758e336df52216405a47eda09283e261d2" => :mavericks
+    sha256 "21eeb7930847526b283fe411c0e9c733fd915f31ff66127985a0b4aebb9c80a0" => :mountain_lion
   end
 
   option "with-jvm", "Build also for jvm as an alternate backend."
@@ -35,9 +34,6 @@ class RakudoStar < Formula
     system "perl", "Configure.pl", "--prefix=#{prefix}", "--backends=" + backends.join(","), *generate
     system "make"
     system "make", "install"
-
-    # Panda is now in share/perl6/site/bin, so we need to symlink it too.
-    bin.install_symlink Dir[share/"perl6/site/bin/*"]
 
     # Move the man pages out of the top level into share.
     # Not all backends seem to generate man pages at this point (moar does not, parrot does),

@@ -2,16 +2,15 @@ class Freeswitch < Formula
   desc "Telephony platform to route various communication protocols"
   homepage "https://freeswitch.org"
   url "https://freeswitch.org/stash/scm/fs/freeswitch.git",
-      :tag => "v1.4.23",
-      :revision => "aaef0e298730d0f1cc11f2573bb6e6d999b0242d"
+      :tag => "v1.4.21",
+      :revision => "87a059bafcc094bdb4899b6a20bcd215e249109e"
 
   head "https://freeswitch.org/stash/scm/fs/freeswitch.git"
 
   bottle do
-    revision 1
-    sha256 "1d1cbe79aa91e0aa77586b88e1d2961d628b5c63de634ce54cca2ca974d108a4" => :el_capitan
-    sha256 "e8e0043be112e0733953704f8427481e544441efdbaa44cdc9a37223059507e2" => :yosemite
-    sha256 "af61022b134d07644098f1cb0f4f5f7ffcb52cf182e5444166b818f88de6e864" => :mavericks
+    sha256 "c9fa9c639c622f8d19aec5f797d51586a3b04d85086cc7de023f9b1a8dbd452e" => :yosemite
+    sha256 "c87a3fe0bc3bf979a3fdf061905d5253b454ea2e3626c7cbf4f236acc275c260" => :mavericks
+    sha256 "ad4e2bd326f69554321a3a4037c11d81c80fe0d09238dfbb2df79d9e711ed599" => :mountain_lion
   end
 
   option "without-moh", "Do not install music-on-hold"
@@ -32,9 +31,6 @@ class Freeswitch < Formula
   depends_on "pcre"
   depends_on "speex"
   depends_on "sqlite"
-
-  # https://github.com/Homebrew/homebrew/issues/42865
-  fails_with :gcc
 
   #----------------------- Begin sound file resources -------------------------
   sounds_url_base = "https://files.freeswitch.org/releases/sounds"
@@ -210,7 +206,7 @@ class Freeswitch < Formula
         <string>#{plist_name}</string>
       <key>ProgramArguments</key>
         <array>
-          <string>#{opt_bin}/freeswitch</string>
+          <string>#{bin}/freeswitch</string>
           <string>-nc</string>
           <string>-nonat</string>
         </array>

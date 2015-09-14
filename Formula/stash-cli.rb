@@ -1,11 +1,9 @@
 class StashCli < Formula
   desc "Command-line interface clients for Atlassian products"
   homepage "https://bobswift.atlassian.net/wiki/pages/viewpage.action?pageId=1966101"
-  url "https://bobswift.atlassian.net/wiki/download/attachments/16285777/atlassian-cli-4.5.0-distribution.zip"
-  version "4.5.0"
-  sha256 "79fc81d3b383348702cb6d24983fe002aefe4a9b859380bcdd1f19e78ac6f046"
-
-  bottle :unneeded
+  url "https://bobswift.atlassian.net/wiki/download/attachments/16285777/atlassian-cli-4.3.0-distribution.zip"
+  version "4.3.0"
+  sha256 "b0487ad7795d1970de09d21c17ebea9caf1d7f9c12449c5102a88b0521e2c363"
 
   depends_on :java => "1.7+"
 
@@ -21,7 +19,7 @@ class StashCli < Formula
   test do
     Dir.glob(bin/"*") do |f|
       cmd = File.basename(f, ".sh")
-      assert_match "Usage:", shell_output(bin/"#{cmd} --help 2>&1 | head") unless cmd == "atlassian"
+      assert shell_output(bin/"#{cmd} --help 2>&1 | head").include?("Usage:") unless cmd == "atlassian"
     end
   end
 end

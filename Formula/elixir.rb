@@ -1,4 +1,4 @@
-class Erlang18Requirement < Requirement
+class Erlang17Requirement < Requirement
   fatal true
   env :userpaths
   default_formula "erlang"
@@ -6,12 +6,12 @@ class Erlang18Requirement < Requirement
   satisfy do
     erl = which("erl")
     next unless erl
-    `#{erl} -noshell -eval 'io:fwrite("~s", [erlang:system_info(otp_release) >= "18"])' -s erlang halt | grep -q '^true'`
+    `#{erl} -noshell -eval 'io:fwrite("~s~n", [erlang:system_info(otp_release)]).' -s erlang halt | grep -q '^1[789]'`
     $?.exitstatus == 0
   end
 
   def message; <<-EOS.undent
-    Erlang 18+ is required to install.
+    Erlang 17+ is required to install.
 
     You can install this with:
       brew install erlang
@@ -25,18 +25,24 @@ end
 class Elixir < Formula
   desc "Functional metaprogramming aware language built on Erlang VM"
   homepage "http://elixir-lang.org/"
-  url "https://github.com/elixir-lang/elixir/archive/v1.2.3.tar.gz"
-  sha256 "886e4efea0e9bbbb4ba55ea659986fb3460c5b77045410c10144838192214827"
+  url "https://github.com/elixir-lang/elixir/archive/v1.0.5.tar.gz"
+  sha256 "5ce5c226b3d11d751b41ad79b915b86f13f8a1b89ef3e733321d3f46ff4d81b8"
 
   head "https://github.com/elixir-lang/elixir.git"
 
-  bottle do
-    sha256 "b46ff99337bab229e4561b6590ba7ffe3e9faac0156a7b8ea1354f1942a01e50" => :el_capitan
-    sha256 "7da51bcadaae886dab97d7869891cbc2eab23be56f28dbeb7a6b67f465fd172c" => :yosemite
-    sha256 "5d241e80ce709ebaca7f3be066f922f835edfeb26dc4efe0f205efbddba20cc3" => :mavericks
+  devel do
+    version "1.1.0"
+    url "https://github.com/elixir-lang/elixir/archive/v1.1.0-beta.tar.gz"
+    sha256 "a506907137dc2432bf40f3c6a86ca807af5bf9d7f3a3efd05fed14e5267beb79"
   end
 
-  depends_on Erlang18Requirement
+  bottle do
+    sha256 "e25c7d985147de85b0e8d0adfc12f92c34af748af2c58557ad4f34aa7f96e63b" => :yosemite
+    sha256 "2c5931b0eea75db2e22c6a20cb17c632c5052d03254bd355c0db5b9dbd90ba51" => :mavericks
+    sha256 "05bafa8e03110933685d0f8888a5b461a8ce51427c7cf23a069995a9a9698794" => :mountain_lion
+  end
+
+  depends_on Erlang17Requirement
 
   def install
     system "make"

@@ -1,29 +1,29 @@
 class Ford < Formula
   desc "Automatic documentation generator for modern Fortran programs"
   homepage "https://github.com/cmacmackin/ford/"
-  url "https://pypi.python.org/packages/source/F/FORD/FORD-4.5.2.tar.gz"
-  sha256 "a30853b48aa05d3af6f8f8f1f4b3dc9c55a0104bd964cbdfa1bb113c5c3953ce"
+  url "https://pypi.python.org/packages/source/F/FORD/FORD-4.2.3.tar.gz"
+  sha256 "8dac3abec4ea88ff68218738bbd0407c2a0b1714c644e28883b1e36611c609b4"
 
   head "https://github.com/cmacmackin/ford.git"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "4bd8c0e12fc7f9bdca82315720e9dcf55487dd9bc8eacb618c2a068e42b82209" => :el_capitan
-    sha256 "0ab461e2572ea07ce74cab04f496d49152eb20de4c71f8a38e97770bf4e613c1" => :yosemite
-    sha256 "ab42ac7eb9f88a0a333ed06182887e654d6dbe7bafbe9c3cbf0348867a55b7e7" => :mavericks
+    cellar :any
+    sha256 "1f69c2ad783b780f5f98d4ffb6f9f9e4bf9421c1fe409ab4c4e8d41aa1472d6e" => :yosemite
+    sha256 "ef663ce6c97e57e3d3aac8a4944a9efe90c850749bfab219bb4ac3a26c9a5544" => :mavericks
+    sha256 "ce4bc86826ecbd61f9bf7a344dcf1cd623f5449b0e9282b551c8c486a44791ab" => :mountain_lion
   end
 
   depends_on "graphviz"
   depends_on :python if MacOS.version <= :snow_leopard
 
   resource "beautifulsoup4" do
-    url "https://pypi.python.org/packages/source/b/beautifulsoup4/beautifulsoup4-4.4.1.tar.gz"
-    sha256 "87d4013d0625d4789a4f56b8d79a04d5ce6db1152bb65f1d39744f7709a366b4"
+    url "https://pypi.python.org/packages/source/b/beautifulsoup4/beautifulsoup4-4.4.0.tar.gz"
+    sha256 "fad91da88f69438b9ba939ab1b2cabaa31b1d914f1cccb4bb157a993ed2917f6"
   end
 
   resource "graphviz" do
-    url "https://pypi.python.org/packages/source/g/graphviz/graphviz-0.4.8.zip"
-    sha256 "71d56c61af9b4ff5e1e64a89b46872aa27c598bab8b0e9083f0fd3213cfc28b0"
+    url "https://pypi.python.org/packages/source/g/graphviz/graphviz-0.4.6.zip"
+    sha256 "f12da6fd8318d909ef13bb269bf6b96dd09d3b908a8e2b373b9ba5dbe3d3ec69"
   end
 
   resource "Jinja2" do
@@ -32,8 +32,8 @@ class Ford < Formula
   end
 
   resource "Markdown" do
-    url "https://pypi.python.org/packages/source/M/Markdown/Markdown-2.6.5.tar.gz"
-    sha256 "8d94cf6273606f76753fcb1324623792b3738c7612c2b180c85cc5e88642e560"
+    url "https://pypi.python.org/packages/source/M/Markdown/Markdown-2.6.2.tar.gz"
+    sha256 "ee17d0d7dc091e645dd48302a2e21301cc68f188505c2069d8635f94554170bf"
   end
 
   resource "markdown-include" do
@@ -76,12 +76,12 @@ class Ford < Formula
       project_dir: ./src
       output_dir: ./doc
       project_github: https://github.com/cmacmackin/futility
-      project_website: https://github.com
+      project_website: http://github.com
       summary: Some Fortran program which I wrote.
       author: John Doe
       author_description: I program stuff in Fortran.
       github: https://github.com/cmacmackin
-      email: john.doe@example.com
+      email: john.doe@address.com
       predocmark: >
       docmark_alt: #
       predocmark_alt: <
